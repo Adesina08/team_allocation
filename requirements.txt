@@ -1,0 +1,7 @@
+streamlit
+pandas
+openpyxl
+plotly
+Pillow
+streamlit-extras
+streamlit-card
