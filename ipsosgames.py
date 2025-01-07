@@ -13,7 +13,7 @@ import io
 
 # Set page config
 st.set_page_config(
-    page_title="AP2025 Ipsos Games",
+    page_title="2025 Ipsos Games",
     page_icon="🎮",
     layout="wide",
     initial_sidebar_state="collapsed",
