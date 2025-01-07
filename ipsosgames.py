@@ -169,7 +169,7 @@ if "available_staff" not in st.session_state:
 
 # Home page function
 def home_page():
-    st.title("Welcome to AP2025 Ipsos Games 🎮")
+    st.title("Welcome to Ipsos Games 2025 🎮")
 
     # Hero section with enhanced styling
     col1, col2, col3 = st.columns([1, 2, 1])
