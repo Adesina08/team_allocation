@@ -162,7 +162,7 @@ if "team_assignments" not in st.session_state:
 if "available_staff" not in st.session_state:
     # Load staff data from Excel file
     excel_file_path = (
-        r"C:\Users\Adesina.Adeyemo\Documents\staffs.xlsx"  # Update with your file path
+        "\staffs.xlsx"  # Update with your file path
     )
     st.session_state.available_staff = pd.read_excel(excel_file_path)
 
