@@ -186,6 +186,35 @@ st.markdown(
         gap: 10px;
         padding: 10px;
     }
+    
+        /* Team member styles */
+    .team-member-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin: 10px 0;
+    }
+    
+    .member-photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 75px;
+        margin: 0 auto 15px auto;
+        background: #f0f0f0;
+    }
+    
+    .member-name {
+        font-size: 1.2em;
+        color: #2C3E50;
+        margin-bottom: 5px;
+    }
+    
+    .member-email {
+        color: #666;
+        font-size: 0.9em;
+    }
 </style>
 """,
     unsafe_allow_html=True,
@@ -205,7 +234,7 @@ if "team_assignments" not in st.session_state:
 if "available_staff" not in st.session_state:
     # Load staff data from Excel file
     excel_file_path = (
-       "staffs.xlsx"  # Update with your file path
+        r"C:\Users\Adesina.Adeyemo\Documents\staffs.xlsx"  # Update with your file path
     )
     st.session_state.available_staff = pd.read_excel(excel_file_path)
 
@@ -483,54 +512,47 @@ def team_assignment_page():
 def ai_champions_page():
     st.title("Meet the AI Champions 🚀")
 
-    # Create two rows of three columns each for team members
+    # Create two rows of three columns each
     row1_cols = st.columns(3)
     row2_cols = st.columns(3)
 
+    # Team members data
     team_members = [
-        {
-            "name": "Alex Chen",
-            "position": "Lead AI Developer",
-            "email": "alex.chen@ipsos.com",
-        },
-        {
-            "name": "Sarah Johnson",
-            "position": "Senior AI Engineer",
-            "email": "sarah.johnson@ipsos.com",
-        },
-        # Add 4 more team members...
+        {"name": "Alex Chen", "email": "alex.chen@ipsos.com"},
+        {"name": "Sarah Johnson", "email": "sarah.johnson@ipsos.com"},
+        {"name": "Michael Brown", "email": "michael.brown@ipsos.com"},
+        {"name": "Emma Davis", "email": "emma.davis@ipsos.com"},
+        {"name": "James Wilson", "email": "james.wilson@ipsos.com"},
+        {"name": "Linda Martinez", "email": "linda.martinez@ipsos.com"},
     ]
 
-    # Display first row of team members
+    # Display first row
     for i in range(3):
         with row1_cols[i]:
-            if i < len(team_members):
-                st.image("https://via.placeholder.com/200x200", caption="")
-                st.markdown(
-                    f"""
-                <div style='text-align: center;'>
-                    <h3>{team_members[i]['name']}</h3>
-                    <p>{team_members[i]['email']}</p>
-                </div>
-                """,
-                    unsafe_allow_html=True,
-                )
+            st.markdown(
+                f"""
+            <div class="team-member-card">
+                <div class="member-photo"></div>
+                <div class="member-name">{team_members[i]['name']}</div>
+                <div class="member-email">{team_members[i]['email']}</div>
+            </div>
+            """,
+                unsafe_allow_html=True,
+            )
 
-    # Display second row of team members
+    # Display second row
     for i in range(3):
         with row2_cols[i]:
-            member_idx = i + 3
-            if member_idx < len(team_members):
-                st.image("https://via.placeholder.com/200x200", caption="")
-                st.markdown(
-                    f"""
-                <div style='text-align: center;'>
-                    <h3>{team_members[member_idx]['name']}</h3>
-                    <p>{team_members[member_idx]['email']}</p>
-                </div>
-                """,
-                    unsafe_allow_html=True,
-                )
+            st.markdown(
+                f"""
+            <div class="team-member-card">
+                <div class="member-photo"></div>
+                <div class="member-name">{team_members[i+3]['name']}</div>
+                <div class="member-email">{team_members[i+3]['email']}</div>
+            </div>
+            """,
+                unsafe_allow_html=True,
+            )
 
 
 # Navigation
