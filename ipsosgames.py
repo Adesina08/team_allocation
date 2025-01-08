@@ -143,6 +143,49 @@ st.markdown(
         from { opacity: 0; transform: translate(-50%, -60%); }
         to { opacity: 1; transform: translate(-50%, -50%); }
     }
+    /* Gallery Section Styles */
+    .gallery-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .gallery-item {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .fun-moments-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    /* Staff Categories Section */
+    .staff-category {
+        background: linear-gradient(to right, #f8f9fa, #e9ecef);
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .staff-category h3 {
+        color: #2C3E50;
+        border-bottom: 2px solid #1f77b4;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .staff-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+        padding: 10px;
+    }
 </style>
 """,
     unsafe_allow_html=True,
@@ -162,7 +205,7 @@ if "team_assignments" not in st.session_state:
 if "available_staff" not in st.session_state:
     # Load staff data from Excel file
     excel_file_path = (
-        "staffs.xlsx"  # Update with your file path
+        r"C:\Users\Adesina.Adeyemo\Documents\staffs.xlsx"  # Update with your file path
     )
     st.session_state.available_staff = pd.read_excel(excel_file_path)
 
@@ -171,38 +214,50 @@ if "available_staff" not in st.session_state:
 def home_page():
     st.title("Welcome to Ipsos Games 2025 🎮")
 
-    # Hero section with enhanced styling
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
+    # Create two columns for the gallery section
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("### 🏆 Previous Winners")
+
+        # Winner team details
         st.markdown(
-            """ 
-        <div style='text-align: center; padding: 30px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);'>
-            <h1 style='color: #1f77b4; margin-bottom: 20px;'>Celebrating Excellence</h1>
-            <p style='font-size: 1.2em; color: #2C3E50;'>Join us in this exciting journey of teamwork and innovation</p>
+            """
+        <div style='padding: 10px; background: #f8f9fa; border-radius: 5px; margin-bottom: 10px;'>
+            <h4>Team Integrity</h4>
+            <p>Overall Champions 2024</p>
+            <p>Team Captain: John Doe</p>
         </div>
         """,
             unsafe_allow_html=True,
         )
 
-    # Past Winners Section with enhanced cards
-    st.markdown("### 🏆 Past Winners")
-    winners_col1, winners_col2, winners_col3 = st.columns(3)
-
-    with winners_col1:
-        card(
-            title="Team Integrity",
-            text="Overall Champions 2024",
-            image="https://placeholder.com/150",
-            styles={
-                "card": {
-                    "background": "linear-gradient(135deg, #FF4B2B 0%, #FF416C 100%)",
-                    "box-shadow": "0 4px 6px rgba(0,0,0,0.1)",
-                },
-                "text": {"color": "white"},
-            },
+        # Placeholder for winner team photo
+        st.image(
+            "https://via.placeholder.com/400x300",
+            caption="Team Integrity - Champions 2024",
         )
 
-    # [Add similar card styling for other winners]
+    with col2:
+        st.markdown("### 📸 Fun Moments")
+
+        # Create two rows of three images each
+        row1_cols = st.columns(3)
+        row2_cols = st.columns(3)
+
+        # First row of images
+        for i in range(3):
+            with row1_cols[i]:
+                st.image(
+                    "https://via.placeholder.com/200x150", caption=f"Fun Moment {i+1}"
+                )
+
+        # Second row of images
+        for i in range(3):
+            with row2_cols[i]:
+                st.image(
+                    "https://via.placeholder.com/200x150", caption=f"Fun Moment {i+4}"
+                )
 
     # New Rules Section
     st.markdown(
@@ -374,75 +429,108 @@ def team_assignment_page():
 
     for idx, (team, members) in enumerate(st.session_state.team_assignments.items()):
         with cols[idx]:
+            if members:  # Only display if team has members
+                st.markdown(
+                    f"""
+                    <div class='team-container {team_colors[team]}'>
+                        <h3>{team}</h3>
+                        <div class='members-list'>
+                            {''.join([f"<p>{member['Name']}</p>" for member in members])}
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+
+    # Staff categories section
+    st.markdown("### Available Staff Members")
+
+    # Group staff by category
+    categories = [
+        "Leadership and Line Managers",
+        "Diaspora",
+        "Floor 0 & 1",
+        "Floor 2",
+        "Floor 3",
+        "Floor 4",
+        "Floor 5",
+    ]
+
+    for category in categories:
+        # Filter staff by category
+        category_staff = st.session_state.available_staff[
+            st.session_state.available_staff["Category"] == category
+        ]
+
+        if not category_staff.empty:
             st.markdown(
                 f"""
-            <div class='team-container {team_colors[team]}'>
-                <h3>{team}</h3>
-                <div class='members-list'>
-                    {''.join([f"<p>{member['Name']}</p>" for member in members])}
-                </div>
+            <div class='staff-category'>
+                <h3>{category}</h3>
             </div>
             """,
                 unsafe_allow_html=True,
             )
 
-    # Available staff section with enhanced styling
-    st.markdown(
-        """ 
-    <div style='background: linear-gradient(to right, #f8f9fa, #e9ecef); padding: 20px; border-radius: 15px; margin-top: 30px;'>
-        <h3 style='color: #2C3E50; margin-bottom: 20px;'>Select Staff Member</h3>
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
-
-    staff_cols = st.columns(6)
-    for idx, (_, staff) in enumerate(st.session_state.available_staff.iterrows()):
-        col_idx = idx % 6
-        with staff_cols[col_idx]:
-            if st.button(staff["Name"], key=f"staff_{idx}"):
-                st.session_state.selected_staff = staff.to_dict()
-                assign_team_member()
+            cols = st.columns(6)
+            for idx, (_, staff) in enumerate(category_staff.iterrows()):
+                with cols[idx % 6]:
+                    if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
+                        st.session_state.selected_staff = staff.to_dict()
+                        assign_team_member()
 
 
 def ai_champions_page():
     st.title("Meet the AI Champions 🚀")
 
-    st.markdown(
-        """
-    <div style='text-align: center; margin-bottom: 30px;'>
-        <p style='font-size: 1.2em;'>The brilliant minds behind the AP2025 Ipsos Games</p>
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
-
-    # Display team members in grid
-    cols = st.columns(3)
+    # Create two rows of three columns each for team members
+    row1_cols = st.columns(3)
+    row2_cols = st.columns(3)
 
     team_members = [
         {
             "name": "Alex Chen",
             "position": "Lead AI Developer",
             "email": "alex.chen@ipsos.com",
-            "expertise": ["Machine Learning", "Team Leadership"],
         },
         {
             "name": "Sarah Johnson",
             "position": "Senior AI Engineer",
             "email": "sarah.johnson@ipsos.com",
-            "expertise": ["NLP", "Deep Learning"],
         },
-        # Add more team members
+        # Add 4 more team members...
     ]
 
-    for idx, member in enumerate(team_members):
-        with cols[idx % 3]:
-            card(
-                title=member["name"],
-                text=f"{member['position']}\n{member['email']}",
-                image="https://placeholder.com/150",
-            )
+    # Display first row of team members
+    for i in range(3):
+        with row1_cols[i]:
+            if i < len(team_members):
+                st.image("https://via.placeholder.com/200x200", caption="")
+                st.markdown(
+                    f"""
+                <div style='text-align: center;'>
+                    <h3>{team_members[i]['name']}</h3>
+                    <p>{team_members[i]['email']}</p>
+                </div>
+                """,
+                    unsafe_allow_html=True,
+                )
+
+    # Display second row of team members
+    for i in range(3):
+        with row2_cols[i]:
+            member_idx = i + 3
+            if member_idx < len(team_members):
+                st.image("https://via.placeholder.com/200x200", caption="")
+                st.markdown(
+                    f"""
+                <div style='text-align: center;'>
+                    <h3>{team_members[member_idx]['name']}</h3>
+                    <p>{team_members[member_idx]['email']}</p>
+                </div>
+                """,
+                    unsafe_allow_html=True,
+                )
 
 
 # Navigation
