@@ -603,7 +603,7 @@ def ai_champions_page():
         {
             "name": "Alexan Carrilho",
             "email": "Alexan.Carrilho@ipsos.com",
-            "image": "images/alexan.jpeg",
+            "image": "images\alexan.jpeg",
         },
         {
             "name": "Oludare Alatise",
