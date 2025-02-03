@@ -342,15 +342,15 @@ def home_page():
 
         # List of fun moment images (using relative paths)
         fun_moments_images = [
-            "images\moment_1_page-0008.jpg",
-            "images\moment_1_page-0017.jpg",
-            "images\moment_1_page-0018.jpg",
-            "images\moment_1_page-0014.jpg",
-            "images\moment_1_page-0012.jpg",
-            "images\moment_1_page-0009.jpg",
-            "images\moment_1_page-0011.jpg",
-            "images\moment_1_page-0001.jpg",
-            "images\moment_1_page-0003.jpg",
+            "images/moment_1_page-0008.jpg",
+            "images/moment_1_page-0017.jpg",
+            "images/moment_1_page-0018.jpg",
+            "images/moment_1_page-0014.jpg",
+            "images/moment_1_page-0012.jpg",
+            "images/moment_1_page-0009.jpg",
+            "images/moment_1_page-0011.jpg",
+            "images/moment_1_page-0001.jpg",
+            "images/moment_1_page-0003.jpg",
         ]
 
         # Create image grid
@@ -603,27 +603,27 @@ def ai_champions_page():
         {
             "name": "Alexan Carrilho",
             "email": "Alexan.Carrilho@ipsos.com",
-            "image": "images\alexan.jpeg",
+            "image": "images/alexan.jpeg",
         },
         {
             "name": "Oludare Alatise",
             "email": "Oludare.Alatise@ipsos.com",
-            "image": "images\dare.jpeg",
+            "image": "images/dare.jpeg",
         },
         {
             "name": "Samuel Jimoh",
             "email": "Samuel.Jimoh@ipsos.com",
-            "image": "images\samuel.jpeg",
+            "image": "images/samuel.jpeg",
         },
         {
             "name": "Paul Oluwadare",
             "email": "Paul.Oluwadare@ipsos.com",
-            "image": "images\paul.jpeg",
+            "image": "images/paul.jpeg",
         },
         {
             "name": "Adesina Adeyemo",
             "email": "Adesina.Adeyemo@ipsos.com",
-            "image": "images\Adesina_Pic.jpg",
+            "image": "images/Adesina_Pic.jpg",
         },
     ]
 
