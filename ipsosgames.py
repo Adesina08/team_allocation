@@ -10,6 +10,11 @@ from streamlit_extras.colored_header import colored_header
 from streamlit_card import card
 import json
 import io
+from PIL import Image
+import base64
+import os
+import math
+import streamlit.components.v1 as components
 
 # Set page config
 st.set_page_config(
@@ -18,6 +23,17 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed",
 )
+
+
+def get_image_base64(image_path):
+    """Convert image to base64 string"""
+    try:
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    except Exception as e:
+        print(f"Error loading image {image_path}: {e}")
+        return None
+
 
 # Enhanced Custom CSS with team colors and animations
 st.markdown(
@@ -188,38 +204,44 @@ st.markdown(
     }
     
         /* Team member styles */
-    .team-member-card {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin: 10px 0;
-    }
-    
-    .member-photo {
-        width: 150px;
-        height: 150px;
-        border-radius: 75px;
-        margin: 0 auto 15px auto;
-        background: #f0f0f0;
-    }
-    
-    .member-name {
-        font-size: 1.2em;
-        color: #2C3E50;
-        margin-bottom: 5px;
-    }
-    
-    .member-email {
-        color: #666;
-        font-size: 0.9em;
-    }
-</style>
-""",
+       /* Team member styles */
+        .team-member-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 10px 0;
+        }
+        
+        .member-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 75px;
+            margin: 0 auto 15px auto;
+            overflow: hidden;
+        }
+        
+        .member-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .member-name {
+            font-size: 1.2em;
+            color: #2C3E50;
+            margin-bottom: 5px;
+        }
+        
+        .member-email {
+            color: #666;
+            font-size: 0.9em;
+        }
+        </style>
+    """,
     unsafe_allow_html=True,
 )
-
 # Initialize session state
 if "page" not in st.session_state:
     st.session_state.page = "home"
@@ -234,16 +256,62 @@ if "team_assignments" not in st.session_state:
 if "available_staff" not in st.session_state:
     # Load staff data from Excel file
     excel_file_path = (
-        "staffs.xlsx"  # Update with your file path
+        r"C:\Users\Adesina.Adeyemo\Documents\staffs.xlsx"  # Update with your file path
     )
     st.session_state.available_staff = pd.read_excel(excel_file_path)
 
 
-# Home page function
+def create_image_grid(images, images_per_row=3):
+    """Create a grid of images with consistent spacing and sizing"""
+    # Calculate number of rows needed
+    num_rows = math.ceil(len(images) / images_per_row)
+
+    # Custom CSS for image grid
+    st.markdown(
+        """
+        <style>
+        .image-grid-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .stImage {
+            margin: 0 auto;
+        }
+        .image-caption {
+            text-align: center;
+            margin-top: 5px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        </style>
+    """,
+        unsafe_allow_html=True,
+    )
+
+    # Create rows
+    for row in range(num_rows):
+        cols = st.columns(images_per_row)
+        for col in range(images_per_row):
+            idx = row * images_per_row + col
+            if idx < len(images):
+                with cols[col]:
+                    st.image(
+                        images[idx],
+                        caption=f"Fun Moment {idx + 1}",
+                        use_column_width=True,
+                    )
+
+
 def home_page():
     st.title("Welcome to Ipsos Games 2025 🎮")
 
-    # Create two columns for the gallery section
+    # Create two columns for the main sections
     col1, col2 = st.columns(2)
 
     with col1:
@@ -252,41 +320,41 @@ def home_page():
         # Winner team details
         st.markdown(
             """
-        <div style='padding: 10px; background: #f8f9fa; border-radius: 5px; margin-bottom: 10px;'>
-            <h4>Team Integrity</h4>
-            <p>Overall Champions 2024</p>
-            <p>Team Captain: John Doe</p>
-        </div>
-        """,
+            <div style='padding: 15px; background: #f8f9fa; border-radius: 5px; margin-bottom: 15px; 
+                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+                <h4 style='margin-top: 0; color: #2C3E50;'>Team Integrity</h4>
+                <p style='margin: 5px 0;'>Overall Champions 2024</p>
+                <p style='margin: 5px 0;'>Team Captain: Micheal Dukunmsin</p>
+            </div>
+            """,
             unsafe_allow_html=True,
         )
 
-        # Placeholder for winner team photo
+        # Winner team photo
         st.image(
-            "https://via.placeholder.com/400x300",
-            caption="Team Integrity - Champions 2024",
+            "images\moment_1_page-0012.jpg",  # Update with relative path
+            use_column_width=True,
+            caption="Champion Team Photo",
         )
 
     with col2:
         st.markdown("### 📸 Fun Moments")
 
-        # Create two rows of three images each
-        row1_cols = st.columns(3)
-        row2_cols = st.columns(3)
+        # List of fun moment images (using relative paths)
+        fun_moments_images = [
+            "images\moment_1_page-0008.jpg",
+            "images\moment_1_page-0017.jpg",
+            "images\moment_1_page-0018.jpg",
+            "images\moment_1_page-0014.jpg",
+            "images\moment_1_page-0012.jpg",
+            "images\moment_1_page-0009.jpg",
+            "images\moment_1_page-0011.jpg",
+            "images\moment_1_page-0001.jpg",
+            "images\moment_1_page-0003.jpg",
+        ]
 
-        # First row of images
-        for i in range(3):
-            with row1_cols[i]:
-                st.image(
-                    "https://via.placeholder.com/200x150", caption=f"Fun Moment {i+1}"
-                )
-
-        # Second row of images
-        for i in range(3):
-            with row2_cols[i]:
-                st.image(
-                    "https://via.placeholder.com/200x150", caption=f"Fun Moment {i+4}"
-                )
+        # Create image grid
+        create_image_grid(fun_moments_images)
 
     # New Rules Section
     st.markdown(
@@ -418,7 +486,7 @@ def assign_team_member():
         f"""
     <div class='success-message'>
         <h2>🎉 Success!</h2>
-        <p>{staff['Name']} has been assigned to {assigned_team}</p>
+        <p>{staff["Name"]} has been assigned to {assigned_team}</p>
     </div>
     """,
         unsafe_allow_html=True,
@@ -426,25 +494,41 @@ def assign_team_member():
     time.sleep(2.5)
     success_placeholder.empty()
 
-    # Check if all staff members have been assigned
-    if len(st.session_state.available_staff) == 0:
-        excel_file = create_team_allocations_excel()  # Create the Excel file
-        st.download_button(
-            label="Download IPSOS Games 2025 Team Allocation",
-            data=excel_file,
-            file_name="IPSOS_Games_2025_Team_Allocation.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            key="download_excel",  # Unique key to avoid issues
-        )
-        st.success(
-            "All staff members have been assigned! The Excel file is ready for download."
-        )
-
-    st.rerun()
+    # Reload page with a query parameter to indicate the target section
+    js = """
+    <script>
+        var url = new URL(window.location.href);
+        url.searchParams.set('scrollTo', '279f950c');
+        window.location.href = url.toString();
+    </script>
+    """
+    components.html(js, height=0)
 
 
 def team_assignment_page():
     st.title("Team Assignment Dashboard")
+
+    # Add an ID to the team assignment dashboard container
+    st.markdown(
+        """
+        <div id='279f950c'>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Check for the query parameter
+    query_params = st.experimental_get_query_params()
+    if query_params.get("scrollTo") == ["team-assignment-dashboard"]:
+        js = """
+        <script>
+            var targetElement = window.parent.document.querySelector("#team-assignment-dashboard");
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        </script>
+        """
+        st.components.v1.html(js, height=0)
 
     # Display team sections with enhanced styling
     cols = st.columns(5)
@@ -464,12 +548,14 @@ def team_assignment_page():
                     <div class='team-container {team_colors[team]}'>
                         <h3>{team}</h3>
                         <div class='members-list'>
-                            {''.join([f"<p>{member['Name']}</p>" for member in members])}
+                            {"".join([f"<p>{member['Name']}</p>" for member in members])}
                         </div>
                     </div>
                     """,
                     unsafe_allow_html=True,
                 )
+
+    # Rest of the function remains unchanged...
 
     # Staff categories section
     st.markdown("### Available Staff Members")
@@ -512,45 +598,61 @@ def team_assignment_page():
 def ai_champions_page():
     st.title("Meet the AI Champions 🚀")
 
-    # Create two rows of three columns each
-    row1_cols = st.columns(3)
-    row2_cols = st.columns(3)
-
-    # Team members data
+    # Team members data with images
     team_members = [
-        {"name": "Alex Chen", "email": "alex.chen@ipsos.com"},
-        {"name": "Sarah Johnson", "email": "sarah.johnson@ipsos.com"},
-        {"name": "Michael Brown", "email": "michael.brown@ipsos.com"},
-        {"name": "Emma Davis", "email": "emma.davis@ipsos.com"},
-        {"name": "James Wilson", "email": "james.wilson@ipsos.com"},
-        {"name": "Linda Martinez", "email": "linda.martinez@ipsos.com"},
+        {
+            "name": "Alexan Carrilho",
+            "email": "Alexan.Carrilho@ipsos.com",
+            "image": r"C:\Users\Adesina.Adeyemo\Downloads\alexan.jpeg",
+        },
+        {
+            "name": "Oludare Alatise",
+            "email": "Oludare.Alatise@ipsos.com",
+            "image": r"C:\Users\Adesina.Adeyemo\Downloads\dare.jpeg",
+        },
+        {
+            "name": "Samuel Jimoh",
+            "email": "Samuel.Jimoh@ipsos.com",
+            "image": r"C:\Users\Adesina.Adeyemo\Downloads\samuel.jpeg",
+        },
+        {
+            "name": "Paul Oluwadare",
+            "email": "Paul.Oluwadare@ipsos.com",
+            "image": r"C:\Users\Adesina.Adeyemo\Downloads\paul.jpeg",
+        },
+        {
+            "name": "Adesina Adeyemo",
+            "email": "Adesina.Adeyemo@ipsos.com",
+            "image": r"C:\Users\Adesina.Adeyemo\Pictures\Adesina_Pic.jpg",
+        },
     ]
 
-    # Display first row
-    for i in range(3):
-        with row1_cols[i]:
-            st.markdown(
-                f"""
-            <div class="team-member-card">
-                <div class="member-photo"></div>
-                <div class="member-name">{team_members[i]['name']}</div>
-                <div class="member-email">{team_members[i]['email']}</div>
-            </div>
-            """,
-                unsafe_allow_html=True,
-            )
+    # Create columns for displaying champions
+    cols = st.columns(3)
 
-    # Display second row
-    for i in range(3):
-        with row2_cols[i]:
+    for i, member in enumerate(team_members):
+        with cols[i % 3]:
+            # Get base64 encoded image
+            image_path = os.path.join(
+                "images", member["image"]
+            )  # Assuming images are in an 'images' folder
+            image_base64 = get_image_base64(image_path)
+
+            if image_base64:
+                img_html = f'<img src="data:image/jpeg;base64,{image_base64}" style="width: 100%; height: 100%; object-fit: cover;">'
+            else:
+                img_html = '<div style="background-color: #f0f0f0; width: 100%; height: 100%;"></div>'
+
             st.markdown(
                 f"""
-            <div class="team-member-card">
-                <div class="member-photo"></div>
-                <div class="member-name">{team_members[i+3]['name']}</div>
-                <div class="member-email">{team_members[i+3]['email']}</div>
-            </div>
-            """,
+                <div class="team-member-card">
+                    <div class="member-photo">
+                        {img_html}
+                    </div>
+                    <div class="member-name">{member["name"]}</div>
+                    <div class="member-email">{member["email"]}</div>
+                </div>
+                """,
                 unsafe_allow_html=True,
             )
 
