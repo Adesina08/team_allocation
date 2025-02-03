@@ -603,27 +603,27 @@ def ai_champions_page():
         {
             "name": "Alexan Carrilho",
             "email": "Alexan.Carrilho@ipsos.com",
-            "image": r"C:\Users\Adesina.Adeyemo\Downloads\alexan.jpeg",
+            "image": "images\alexan.jpeg",
         },
         {
             "name": "Oludare Alatise",
             "email": "Oludare.Alatise@ipsos.com",
-            "image": r"C:\Users\Adesina.Adeyemo\Downloads\dare.jpeg",
+            "image": "images\dare.jpeg",
         },
         {
             "name": "Samuel Jimoh",
             "email": "Samuel.Jimoh@ipsos.com",
-            "image": r"C:\Users\Adesina.Adeyemo\Downloads\samuel.jpeg",
+            "image": "images\samuel.jpeg",
         },
         {
             "name": "Paul Oluwadare",
             "email": "Paul.Oluwadare@ipsos.com",
-            "image": r"C:\Users\Adesina.Adeyemo\Downloads\paul.jpeg",
+            "image": "images\paul.jpeg",
         },
         {
             "name": "Adesina Adeyemo",
             "email": "Adesina.Adeyemo@ipsos.com",
-            "image": r"C:\Users\Adesina.Adeyemo\Pictures\Adesina_Pic.jpg",
+            "image": "images\Adesina_Pic.jpg",
         },
     ]
 
