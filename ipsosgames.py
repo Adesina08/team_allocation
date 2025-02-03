@@ -332,7 +332,7 @@ def home_page():
 
         # Winner team photo
         st.image(
-            r"images\moment_1_page-0012.jpg",  # Update with relative path
+            "images/moment_1_page-0012.jpg",  # Update with relative path
             use_column_width=True,
             caption="Champion Team Photo",
         )
