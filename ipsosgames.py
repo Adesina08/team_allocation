@@ -304,7 +304,7 @@ def create_image_grid(images, images_per_row=3):
                     st.image(
                         images[idx],
                         caption=f"Fun Moment {idx + 1}",
-                        use_column_width=True,
+                         use_container_width=True,
                     )
 
 
@@ -333,7 +333,7 @@ def home_page():
         # Winner team photo
         st.image(
             "images/moment_1_page-0012.jpg",  # Update with relative path
-            use_column_width=True,
+             use_container_width=True,
             caption="Champion Team Photo",
         )
 
