@@ -2,12 +2,19 @@ import streamlit as st
 import pandas as pd
 import time
 import random
+from PIL import Image
+import plotly.graph_objects as go
+import numpy as np
+from streamlit_extras.switch_page_button import switch_page
+from streamlit_extras.colored_header import colored_header
+from streamlit_card import card
+import json
+import io
+from PIL import Image
 import base64
 import os
 import math
 import streamlit.components.v1 as components
-from PIL import Image
-import io
 
 # Set page config
 st.set_page_config(
@@ -57,7 +64,7 @@ st.markdown(
         position: absolute;
         top: -100px;
     }
-    /* Keep all original styles below */
+    /* Button Styles */
     .stButton>button {
         width: 100%;
         border-radius: 5px;
@@ -69,13 +76,163 @@ st.markdown(
         transform: scale(1.02);
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
+        /* Team Container Styles */
     .team-container {
         border-radius: 15px;
         padding: 20px;
         margin: 10px 0;
         transition: all 0.3s ease;
     }
-    /* ... (keep all other original CSS styles) ... */
+        /* Member Card Styles */
+    .member-card {
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 15px;
+        margin: 8px 0;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        color: #333;
+    }
+    .member-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    /* Countdown Animation */
+    .countdown {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 100px;
+        font-weight: bold;
+        color: #1f77b4;
+        z-index: 9999;
+        animation: pulse 0.5s ease-in-out;
+    }
+    @keyframes pulse {
+        0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+        50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+    
+    /* Rules Section */
+    .rules-container {
+        background: linear-gradient(to right, #f8f9fa, #e9ecef);
+        border-radius: 15px;
+        padding: 25px;
+        margin: 20px 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .rules-header {
+        color: #2C3E50;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #1f77b4;
+        padding-bottom: 10px;
+    }
+    .rule-item {
+        padding: 10px;
+        margin: 5px 0;
+        border-left: 3px solid #1f77b4;
+        background-color: white;
+        border-radius: 0 8px 8px 0;
+    }
+    
+    /* Success Message */
+    .success-message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(40, 167, 69, 0.9);
+        color: white;
+        padding: 20px 40px;
+        border-radius: 10px;
+        z-index: 9999;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translate(-50%, -60%); }
+        to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+    /* Gallery Section Styles */
+    .gallery-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .gallery-item {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .fun-moments-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    /* Staff Categories Section */
+    .staff-category {
+        background: linear-gradient(to right, #f8f9fa, #e9ecef);
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .staff-category h3 {
+        color: #2C3E50;
+        border-bottom: 2px solid #1f77b4;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .staff-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+        padding: 10px;
+    }
+       /* Team member styles */
+        .team-member-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 10px 0;
+        }
+        
+        .member-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 75px;
+            margin: 0 auto 15px auto;
+            overflow: hidden;
+        }
+        
+        .member-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .member-name {
+            font-size: 1.2em;
+            color: #2C3E50;
+            margin-bottom: 5px;
+        }
+        
+        .member-email {
+            color: #666;
+            font-size: 0.9em;
+        }
 </style>
 """,
     unsafe_allow_html=True,
@@ -132,7 +289,13 @@ def home_page():
     st.markdown("""
     <div class='rules-container'>
         <h2 class='rules-header'>📋 Team Allocation Rules</h2>
-        <!-- Keep original rule items -->
+        </div>
+        <div class='rule-item'>
+            <strong>Random Assignment:</strong> Team allocation is randomized among eligible teams based on the above constraints
+        </div>
+        <div class='rule-item'>
+            <strong>Fairness Policy:</strong> If no team meets all constraints, member will be assigned to the least populated team
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -141,14 +304,17 @@ def check_constraints(staff_member, team):
     current_team = st.session_state.team_assignments[team]
     
     position_count = sum(1 for m in current_team 
-                      if m["Position"] == staff_member["Position"])
-    if position_count >= 3: return False
+                         if m["Position"] == staff_member["Position"])
+    if position_count >= 3:
+        return False
     
     gender_count = sum(1 for m in current_team 
-                     if m["Gender"] == staff_member["Gender"])
-    if gender_count >= 6: return False
+                       if m["Gender"] == staff_member["Gender"])
+    if gender_count >= 6:
+        return False
     
-    if staff_member["Previous Team"] == team: return False
+    if staff_member["Previous Team"] == team:
+        return False
     
     return True
 
@@ -308,13 +474,13 @@ elif pages[selection] == "champions":
     ai_champions_page()
 
 # Staff update explanation
-st.sidebar.markdown("---")
-st.sidebar.info("""
-**Staff Updates:**  
-1. Update `staffs.xlsx` file  
-2. App will auto-load new data on refresh  
+# st.sidebar.markdown("---")
+# st.sidebar.info("""
+# **Staff Updates:**  
+# 1. Update `staffs.xlsx` file  
+# 2. App will auto-load new data on refresh  
 
-**Standings Updates:**  
-1. Modify `standings.csv` weekly  
-2. Changes reflect immediately
-""")
+# **Standings Updates:**  
+# 1. Modify `standings.csv` weekly  
+# 2. Changes reflect immediately
+# """)
