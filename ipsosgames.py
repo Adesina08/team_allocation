@@ -391,15 +391,15 @@ def ai_champions_page():
     
     team_members = [
         {"name": "Alexan Carrilho", "email": "Alexan.Carrilho@ipsos.com", 
-         "image": "images/alexan.jpeg"},
+         "image": "images/alexan.jpeg",},
         {"name": "Oludare Alatise", "email": "Oludare.Alatise@ipsos.com",
-         "image": "images/dare.jpeg"},
+         "image": "images/dare.jpeg",},
         {"name": "Samuel Jimoh","email": "Samuel.Jimoh@ipsos.com",
-         "image": "images/samuel.jpeg"},
+         "image": "images/samuel.jpeg",},
         {"name": "Paul Oluwadare","email": "Paul.Oluwadare@ipsos.com",
-         "image": "images/paul.jpeg"},
+         "image": "images/paul.jpeg",},
         {"name": "Adesina Adeyemo","email": "Adesina.Adeyemo@ipsos.com",
-         "image": "images/Adesina_Pic.jpg"},
+         "image": "images/Adesina_Pic.jpg",},
     ]
     
     cols = st.columns(3)
