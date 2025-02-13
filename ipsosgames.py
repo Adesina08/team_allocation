@@ -174,7 +174,7 @@ st.markdown(
     .fun-moments-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
+        gap: 35px;
     }
     
     /* Staff Categories Section */
