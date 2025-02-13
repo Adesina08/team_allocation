@@ -268,7 +268,7 @@ def home_page():
         st.markdown("""
             <div style='padding:15px; background:#f8f9fa; border-radius:5px; margin-bottom:15px;'>
                 <h4 style='margin-top:0; color:#2C3E50;'>Overall Champions 2024: Team Integrity</h4>
-                <p style='margin:5px 0;'>Team Captain: Micheal Dukunmsin</p>
+                <p style='margin:5px 0;'>Team Captain: Micheal Dukumnsin</p>
             </div>
         """, unsafe_allow_html=True)
         st.image("images/moment_1_page-0012.jpg", use_container_width=True)
@@ -278,10 +278,13 @@ def home_page():
         fun_moments_images = [
             "images/moment_1_page-0008.jpg",
             "images/moment_1_page-0017.jpg",
+            "images/moment_1_page-0018.jpg",
             "images/moment_1_page-0014.jpg",
+            "images/moment_1_page-0012.jpg",
             "images/moment_1_page-0009.jpg",
             "images/moment_1_page-0011.jpg",
             "images/moment_1_page-0001.jpg",
+            "images/moment_1_page-0003.jpg",
         ]
         create_image_grid(fun_moments_images)
 
@@ -290,10 +293,7 @@ def home_page():
         <h2 class='rules-header'>📋 Team Allocation Rules</h2>
         </div>
         <div class='rule-item'>
-            <strong>Random Assignment:</strong> Team allocation is randomized among eligible teams based on the above constraints
-        </div>
-        <div class='rule-item'>
-            <strong>Fairness Policy:</strong> If no team meets all constraints, member will be assigned to the least populated team
+            <strong>Random Assignment:</strong> Team allocation is randomized among eligible teams
         </div>
     </div>
     """, unsafe_allow_html=True)
