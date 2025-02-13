@@ -394,7 +394,12 @@ def ai_champions_page():
          "image": "images/alexan.jpeg"},
         {"name": "Oludare Alatise", "email": "Oludare.Alatise@ipsos.com",
          "image": "images/dare.jpeg"},
-        # ... (keep original team member data)
+        {"name": "Samuel Jimoh","email": "Samuel.Jimoh@ipsos.com",
+         "image": "images/samuel.jpeg"},
+        {"name": "Paul Oluwadare","email": "Paul.Oluwadare@ipsos.com",
+         "image": "images/paul.jpeg"},
+        {"name": "Adesina Adeyemo","email": "Adesina.Adeyemo@ipsos.com",
+         "image": "images/Adesina_Pic.jpg"},
     ]
     
     cols = st.columns(3)
