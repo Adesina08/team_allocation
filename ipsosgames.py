@@ -200,28 +200,28 @@ st.markdown(
         padding: 10px;
     }
        /* Team member styles */
-        .team-member-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin: 10px 0;
-        }
+    .team-member-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin: 10px 0;
+    }
         
-        .member-photo {
-            width: 150px;
-            height: 150px;
-            border-radius: 75px;
-            margin: 0 auto 15px auto;
-            overflow: hidden;
-        }
+    .member-photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 75px;
+        margin: 0 auto 15px auto;
+        overflow: hidden;
+    }
         
-        .member-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    .member-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
         
         .member-name {
             font-size: 1.2em;
@@ -229,10 +229,10 @@ st.markdown(
             margin-bottom: 5px;
         }
         
-        .member-email {
-            color: #666;
-            font-size: 0.9em;
-        }
+    .member-email {
+        color: #666;
+        font-size: 0.9em;
+    }
 </style>
 """,
     unsafe_allow_html=True,
@@ -413,7 +413,7 @@ def ai_champions_page():
                     <div class="member-name">{member["name"]}</div>
                     <div class="member-email">{member["email"]}</div>
                 </div>
-            """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True,)
 
 def assign_team_member():
     """Updated assignment function with auto-scroll"""
