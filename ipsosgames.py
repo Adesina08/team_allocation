@@ -407,13 +407,18 @@ def ai_champions_page():
         with cols[i % 3]:
             img_base64 = get_image_base64(member["image"])
             img_html = f'<img src="data:image/jpeg;base64,{img_base64}"' if img_base64 else ''
-            st.markdown(f"""
+        st.markdown(
+                f"""
                 <div class="team-member-card">
-                    <div class="member-photo">{img_html}</div>
+                    <div class="member-photo">
+                        {img_html}
+                    </div>
                     <div class="member-name">{member["name"]}</div>
                     <div class="member-email">{member["email"]}</div>
                 </div>
-            """, unsafe_allow_html=True,)
+                """,
+                unsafe_allow_html=True,
+            )
 
 def assign_team_member():
     """Updated assignment function with auto-scroll"""
