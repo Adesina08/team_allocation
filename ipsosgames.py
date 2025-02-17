@@ -36,7 +36,19 @@ if "team_assignments" not in st.session_state:
     }
 if "available_staff" not in st.session_state:
     excel_file_path = "staffs.xlsx"
-    st.session_state.available_staff = pd.read_excel(excel_file_path)
+    df = pd.read_excel(excel_file_path)
+    st.session_state.available_staff = df
+    
+    # Load incompatible pairs
+    incompatible_pairs = {}
+    for _, row in df.iterrows():
+        name = row["Name"]
+        incompatible = row.get("Incompatible With", "")
+        if pd.isna(incompatible):
+            incompatible = ""
+        incompatible_list = [x.strip() for x in str(incompatible).split(",")] if incompatible else []
+        incompatible_pairs[name] = incompatible_list
+    st.session_state.incompatible_pairs = incompatible_pairs
 
 # Enhanced CSS with new team colors
 st.markdown(
@@ -299,20 +311,25 @@ def home_page():
     """, unsafe_allow_html=True)
 
 def check_constraints(staff_member, team):
-    """Updated for new teams"""
+    """Updated constraint checking with incompatible pairs"""
     current_team = st.session_state.team_assignments[team]
     
-    position_count = sum(1 for m in current_team 
-                         if m["Position"] == staff_member["Position"])
-    if position_count >= 3:
-        return False
+    # position_count = sum(1 for m in current_team 
+    #                      if m["Position"] == staff_member["Position"])
+    # if position_count >= 3:
+    #     return False
     
-    gender_count = sum(1 for m in current_team 
-                       if m["Gender"] == staff_member["Gender"])
-    if gender_count >= 6:
-        return False
+    # gender_count = sum(1 for m in current_team 
+    #                    if m["Gender"] == staff_member["Gender"])
+    # if gender_count >= 6:
+    #     return False
     
-    if staff_member["Previous Team"] == team:
+    # if staff_member["Previous Team"] == team:
+    #     return False
+# Incompatible pairs constraint
+    incompatible_staff = st.session_state.incompatible_pairs.get(staff_member["Name"], [])
+    current_members = [m["Name"] for m in current_team]
+    if any(name in current_members for name in incompatible_staff):
         return False
     
     return True
@@ -437,25 +454,27 @@ def assign_team_member():
                     else min(st.session_state.team_assignments, 
                            key=lambda t: len(st.session_state.team_assignments[t])))
     
-    # Update state
+    # Update team assignments
     st.session_state.team_assignments[assigned_team].append(staff)
-    st.session_state.available_staff = st.session_state.available_staff[
-        st.session_state.available_staff["Name"] != staff["Name"]
-    ]
     
-    # Success message
-    success = st.empty()
-    success.markdown(
-        f"""<div class='success-message'>
-            <h2>🎉 Success!</h2>
-            <p>{staff["Name"]} → {assigned_team}</p>
-        </div>""", 
-        unsafe_allow_html=True
-    )
-    time.sleep(2)
-    success.empty()
+    # Success message with auto-removal
+    success_html = f"""
+    <div class='success-message'>
+        <h2>🎉 Success!</h2>
+        <p>{staff["Name"]} → {assigned_team}</p>
+    </div>
+    <script>
+        setTimeout(function() {{
+            var elements = document.getElementsByClassName('success-message');
+            while(elements.length > 0){{
+                elements[0].parentNode.removeChild(elements[0]);
+            }}
+        }}, 2000);
+    </script>
+    """
+    components.html(success_html, height=0)
     
-    # Auto-scroll
+    # Auto-scroll to top
     components.html("""
     <script>
         window.parent.document.querySelector('.scroll-target').scrollIntoView();
@@ -481,15 +500,3 @@ elif pages[selection] == "standings":
     standings_page()
 elif pages[selection] == "champions":
     ai_champions_page()
-
-# Staff update explanation
-# st.sidebar.markdown("---")
-# st.sidebar.info("""
-# **Staff Updates:**  
-# 1. Update `staffs.xlsx` file  
-# 2. App will auto-load new data on refresh  
-
-# **Standings Updates:**  
-# 1. Modify `standings.csv` weekly  
-# 2. Changes reflect immediately
-# """)
