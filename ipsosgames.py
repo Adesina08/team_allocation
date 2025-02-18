@@ -343,23 +343,23 @@ def team_assignment_page():
         "Sassy": "team-sassy",
     }
 
-    for idx, (team, members) in enumerate(st.session_state.team_assignments.items()):
-        with cols[idx]:
-            count = len(members)
-            # Conditionally show members list only if there are members
-            members_html = ""
-            if members:
-                members_html = f"""
-                    <div class='members-list'>
-                        {"".join([f"<p>{m['Name']}</p>" for m in members])}
-                    </div>
-                """
-            st.markdown(f"""
-                <div class='team-container {team_colors[team]}'>
-                    <h3>{team} ({count})</h3>
-                    {members_html}
+for idx, (team, members) in enumerate(st.session_state.team_assignments.items()):
+    with cols[idx]:
+        count = len(members)
+        # Conditionally show members list only if there are members
+        members_html = ""
+        if members:
+            members_html = f"""
+                <div class='members-list'>
+                    {"".join([f"<p>{m['Name']}</p>" for m in members])}
                 </div>
-            """, unsafe_allow_html=True)
+            """
+        st.markdown(f"""
+            <div class='team-container {team_colors[team]}'>
+                <h3>{team} ({count})</h3>
+                {members_html}
+            </div>
+        """, unsafe_allow_html=True)
 
     st.markdown("### Available Staff Members")
     
