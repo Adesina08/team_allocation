@@ -408,7 +408,7 @@ def assign_team_member():
     countdown = st.empty()
     for i in range(3, 0, -1):
         countdown.markdown(f"<div class='countdown'>{i}</div>", unsafe_allow_html=True)
-        time.sleep(0.5)  # Reduced from 1s to 0.5s
+        time.sleep(1)  # Reduced from 1s to 0.5s
     countdown.empty()
     
     # Get suitable teams with intelligent sorting
@@ -438,7 +438,7 @@ def assign_team_member():
         </div>""", 
         unsafe_allow_html=True
     )
-    time.sleep(1.5)
+    time.sleep(2)
     success.empty()
     
     # Force UI update
