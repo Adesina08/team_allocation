@@ -459,7 +459,7 @@ def assign_team_member():
     )
     
     # Force UI update
-    st.rerun()
+    #st.rerun()
     
 def ai_champions_page():
     """Original AI Champions page preserved"""
