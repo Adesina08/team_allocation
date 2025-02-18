@@ -442,12 +442,15 @@ def assign_team_member():
     #success.empty()
     # Force UI update
     st.rerun()
+    
   # Auto-scroll to top
     components.html("""
     <script>
         window.parent.document.querySelector('.scroll-target').scrollIntoView();
     </script>
     """, height=0)
+     # Force UI update
+    st.rerun()
     
 def ai_champions_page():
     """Original AI Champions page preserved"""
