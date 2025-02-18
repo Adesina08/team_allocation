@@ -331,10 +331,10 @@ def check_constraints(staff_member, team):
 def team_assignment_page():
     """Modified team assignment page with immediate updates"""
     st.title("Team Assignment Dashboard")
-    # Ensure that there is an element to scroll to:
-    st.markdown("<div class='scroll-target'></div>", unsafe_allow_html=True)
+    # Scroll target at the top of the team containers
+    st.markdown("<div id='scroll-target'></div>", unsafe_allow_html=True)
     
-    # Display teams
+    # Display teams (existing code remains the same)
     cols = st.columns(4)
     team_colors = {
         "Security": "team-security",
@@ -380,6 +380,23 @@ def team_assignment_page():
                         st.session_state.selected_staff = staff.to_dict()
                         #st.rerun()  # Force immediate UI update
                         assign_team_member()
+                        
+    # Auto-scroll logic (NEW)
+    if st.session_state.get('should_scroll', False):
+        components.html(
+            """
+            <script>
+                const target = window.parent.document.getElementById('scroll-target');
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            </script>
+            """,
+            height=0
+        )
+        # Reset the scroll trigger
+        st.session_state.should_scroll = False
+        
 def assign_team_member():
     """Improved assignment logic with better randomization"""
     staff = st.session_state.selected_staff
@@ -420,22 +437,8 @@ def assign_team_member():
     )
     time.sleep(2)
     success.empty()
-    #st.rerun()
-# Auto-scroll to top by scrolling the element with class 'scroll-target' into view
-components.html(
-    """
-    <script>
-        const target = window.parent.document.querySelector('.scroll-target');
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
-        } else {
-            // Fallback: scroll to top of the page
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    </script>
-    """,
-    height=0
-)
+# After successful assignment
+st.session_state.should_scroll = True  # Trigger scroll on next render
 # Force UI update using st.rerun()
 st.rerun()
 
