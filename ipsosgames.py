@@ -420,7 +420,7 @@ def assign_team_member():
     )
     time.sleep(2)
     success.empty()
-    st.rerun()
+    #st.rerun()
     # Auto-scroll to top by scrolling the element with class 'scroll-target' into view
     components.html(
         """
