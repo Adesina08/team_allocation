@@ -375,7 +375,7 @@ def team_assignment_page():
                     if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
                         # Immediate removal and UI update
                         st.session_state.available_staff = st.session_state.available_staff[
-                            st.session_state.available_staff["Name"] != staff["Name"]
+                            st.session_state.available_staff["Name"] != staff["Name"]]
                         st.session_state.selected_staff = staff.to_dict()
                         st.experimental_rerun()  # Force immediate UI update
                         assign_team_member()
