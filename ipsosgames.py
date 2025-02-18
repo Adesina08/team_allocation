@@ -332,7 +332,10 @@ def team_assignment_page():
     """Modified team assignment page with immediate updates"""
     st.title("Team Assignment Dashboard")
     st.markdown('<div class="scroll-target" id="top"></div>', unsafe_allow_html=True)
-
+    
+    # Put this right before your team containers section
+    st.markdown("<div id='top-of-page'></div>", unsafe_allow_html=True)
+    
     # Display teams
     cols = st.columns(4)
     team_colors = {
@@ -430,25 +433,31 @@ def assign_team_member():
     # Update team assignments
     st.session_state.team_assignments[assigned_team].append(staff)
     
-    # Visible success message
-    success = st.markdown(
-        f"""<div class='success-message'>
-            <h2>🎉 Success!</h2>
-            <p>{staff["Name"]} is a member of {assigned_team} 👍</p>
-        </div>""", 
-        unsafe_allow_html=True
-    )
-    time.sleep(2)
-    success.empty()
-
-  # Auto-scroll to top
-    components.html("""
-    <script>
-        window.parent.document.querySelector('.scroll-target').scrollIntoView();
-    </script>
-    """, height=0)
-    # Force UI update
-    st.rerun()
+        success = st.markdown(
+            f"""<div class='success-message'>
+                <h2>🎉 Success!</h2>
+                <p>{staff["Name"]} is a member of Team {assigned_team} 👍</p>
+            </div>""", 
+            unsafe_allow_html=True
+        )
+        time.sleep(2)
+        success.empty()
+        
+        components.html(
+            """
+            <script>
+                setTimeout(() => {
+                    const element = window.parent.document.getElementById('top-of-page');
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }, 100);
+            </script>
+            """,
+            height=0
+        )
+        
+        st.rerun()
 
 def ai_champions_page():
     """Original AI Champions page preserved"""
