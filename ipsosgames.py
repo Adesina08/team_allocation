@@ -300,15 +300,15 @@ def home_page():
         ]
         create_image_grid(fun_moments_images)
 
-    st.markdown("""
+st.markdown("""
     <div class='rules-container'>
         <h2 class='rules-header'>📋 Team Allocation Rules</h2>
-        </div>
         <div class='rule-item'>
             <strong>Random Assignment:</strong> Team allocation is randomized among eligible teams
         </div>
     </div>
     """, unsafe_allow_html=True)
+
 
 def check_constraints(staff_member, team):
     """Check only incompatible pairs and team balance"""
