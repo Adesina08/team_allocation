@@ -421,23 +421,24 @@ def assign_team_member():
     time.sleep(2)
     success.empty()
     #st.rerun()
-    # Auto-scroll to top by scrolling the element with class 'scroll-target' into view
-    components.html(
-        """
-        <script>
-            const target = window.parent.document.querySelector('.scroll-target');
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-            } else {
-                // Fallback: scroll to top of the page
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        </script>
-        """,
-        height=0
-    )
-    # Force UI update
-    st.experimental_rerun()
+# Auto-scroll to top by scrolling the element with class 'scroll-target' into view
+components.html(
+    """
+    <script>
+        const target = window.parent.document.querySelector('.scroll-target');
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            // Fallback: scroll to top of the page
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+    """,
+    height=0
+)
+# Force UI update using st.rerun()
+st.rerun()
+
     
 def standings_page():
     """New standings page"""
