@@ -449,34 +449,47 @@ def ai_champions_page():
     st.title("Meet the AI Champions 🚀")
     
     team_members = [
-        {"name": "Alexan Carrilho", "email": "Alexan.Carrilho@ipsos.com", 
-         "image": "images/alexan.jpeg",},
-        {"name": "Oludare Alatise", "email": "Oludare.Alatise@ipsos.com",
-         "image": "images/dare.jpeg",},
-        {"name": "Samuel Jimoh","email": "Samuel.Jimoh@ipsos.com",
-         "image": "images/samuel.jpeg",},
-        {"name": "Paul Oluwadare","email": "Paul.Oluwadare@ipsos.com",
-         "image": "images/paul.jpeg",},
-        {"name": "Adesina Adeyemo","email": "Adesina.Adeyemo@ipsos.com",
-         "image": "images/Adesina_Pic.jpg",},
+        {
+            "name": "Alexan Carrilho",
+            "email": "Alexan.Carrilho@ipsos.com",
+            "image": "images/alexan.jpeg",
+        },
+        {
+            "name": "Oludare Alatise",
+            "email": "Oludare.Alatise@ipsos.com",
+            "image": "images/dare.jpeg",
+        },
+        {
+            "name": "Samuel Jimoh",
+            "email": "Samuel.Jimoh@ipsos.com",
+            "image": "images/samuel.jpeg",
+        },
+        {
+            "name": "Paul Oluwadare",
+            "email": "Paul.Oluwadare@ipsos.com",
+            "image": "images/paul.jpeg",
+        },
+        {
+            "name": "Adesina Adeyemo",
+            "email": "Adesina.Adeyemo@ipsos.com",
+            "image": "images/Adesina_Pic.jpg",
+        },
     ]
-    
+
     cols = st.columns(3)
-    
     for i, member in enumerate(team_members):
         with cols[i % 3]:
             img_base64 = get_image_base64(member["image"])
-            
             # Create the card HTML with proper structure and styling
             card_html = f"""
-                <div class="team-member-card">
-                    <div class="member-photo">
-                        <img src="data:image/jpeg;base64,{img_base64}" alt="{member['name']}" />
-                    </div>
-                    <div class="member-name">{member["name"]}</div>
-                    <div class="member-email">{member["email"]}</div>
+            <div class="team-member-card">
+                <div class="member-photo">
+                    <img src="data:image/jpeg;base64,{img_base64}" alt="{member['name']}" />
                 </div>
-
+                <div class="member-name">{member["name"]}</div>
+                <div class="member-email">{member["email"]}</div>
+            </div>
+            """
             st.markdown(card_html, unsafe_allow_html=True)
 
 # Navigation system
