@@ -300,15 +300,15 @@ def home_page():
         ]
         create_image_grid(fun_moments_images)
 
-st.markdown("""
+    st.markdown("""
     <div class='rules-container'>
         <h2 class='rules-header'>📋 Team Allocation Rules</h2>
+        </div>
         <div class='rule-item'>
             <strong>Random Assignment:</strong> Team allocation is randomized among eligible teams
         </div>
     </div>
     """, unsafe_allow_html=True)
-
 
 def check_constraints(staff_member, team):
     """Check only incompatible pairs and team balance"""
@@ -335,45 +335,6 @@ def team_assignment_page():
     # Ensure that there is an element to scroll to:
     st.markdown("<div class='scroll-target'></div>", unsafe_allow_html=True)
     
-    # --- Modal Dialog: Show only when no team members exist ---
-    if sum(len(members) for members in st.session_state.team_assignments.values()) == 0 \
-       and not st.session_state.get("modal_closed", False):
-        st.markdown("""
-        <style>
-            .modal-overlay {
-               position: fixed;
-               top: 0;
-               left: 0;
-               width: 100%;
-               height: 100%;
-               background: rgba(0,0,0,0.5);
-               display: flex;
-               align-items: center;
-               justify-content: center;
-               z-index: 9999;
-            }
-            .modal-content {
-               background: white;
-               padding: 40px;
-               border-radius: 10px;
-               text-align: center;
-               box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            }
-        </style>
-        <div class="modal-overlay">
-          <div class="modal-content">
-             <h2>Team allocation is randomized</h2>
-             <p>Please click the button below to begin team allocation.</p>
-          </div>
-        </div>
-        """, unsafe_allow_html=True)
-        # A separate Streamlit button (rendered below the modal overlay)
-        if st.button("Close", key="close_modal"):
-            st.session_state.modal_closed = True
-            st.experimental_rerun()  # Or st.rerun() if supported in your version
-        st.stop()  # Stop execution until the modal is closed
-    # --- End Modal Dialog ---
-
     # Display teams
     cols = st.columns(4)
     team_colors = {
