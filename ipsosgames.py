@@ -440,8 +440,8 @@ def assign_team_member():
         </div>""", 
         unsafe_allow_html=True
     )
-        time.sleep(2)
-        success.empty()
+    time.sleep(2)
+    success.empty()
         
         components.html(
             """
