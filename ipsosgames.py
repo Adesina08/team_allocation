@@ -442,24 +442,13 @@ def assign_team_member():
     time.sleep(2)
     success.empty()
 
-# Modified auto-scroll code
-components.html(
-    """
+  # Auto-scroll
+    components.html("""
     <script>
-        // Wait for the element to be available
-        setTimeout(() => {
-            const element = window.parent.document.getElementById('top-of-page');
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-        }, 100);
+        window.parent.document.querySelector('.scroll-target').scrollIntoView();
     </script>
-    """,
-    height=0
-)
-
-# Force UI update
-st.rerun()
+    """, height=0)
+    st.rerun()
 
 def ai_champions_page():
     """Original AI Champions page preserved"""
