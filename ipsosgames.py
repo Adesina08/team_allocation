@@ -449,6 +449,9 @@ def assign_team_member():
     </script>
     """, height=0)
 
+# Force UI update
+st.rerun()
+
 def ai_champions_page():
     """Original AI Champions page preserved"""
     st.title("Meet the AI Champions 🚀")
