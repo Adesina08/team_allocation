@@ -417,8 +417,7 @@ def assign_team_member():
         window.parent.document.querySelector('.scroll-target').scrollIntoView();
     </script>
     """, height=0)
-    # Force UI update
-    st.rerun()
+
     
 # Your existing success message code
     success = st.markdown(
@@ -430,7 +429,8 @@ def assign_team_member():
     )
     time.sleep(2)
     success.empty()
-
+    # Force UI update
+    st.rerun()
     
 def standings_page():
     """New standings page"""
