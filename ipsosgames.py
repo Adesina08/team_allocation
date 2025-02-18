@@ -448,7 +448,6 @@ def assign_team_member():
         window.parent.document.querySelector('.scroll-target').scrollIntoView();
     </script>
     """, height=0)
-
 # Force UI update
 st.rerun()
 
