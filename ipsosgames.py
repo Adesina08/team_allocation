@@ -24,7 +24,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Initialize session state
+# Initialize session state with minimum team size
 if "page" not in st.session_state:
     st.session_state.page = "home"
 if "team_assignments" not in st.session_state:
@@ -311,34 +311,29 @@ def home_page():
     """, unsafe_allow_html=True)
 
 def check_constraints(staff_member, team):
-    """Updated constraint checking with incompatible pairs"""
+    """Check only incompatible pairs and team balance"""
     current_team = st.session_state.team_assignments[team]
     
-    # position_count = sum(1 for m in current_team 
-    #                      if m["Position"] == staff_member["Position"])
-    # if position_count >= 3:
-    #     return False
-    
-    # gender_count = sum(1 for m in current_team 
-    #                    if m["Gender"] == staff_member["Gender"])
-    # if gender_count >= 6:
-    #     return False
-    
-    # if staff_member["Previous Team"] == team:
-    #     return False
-# Incompatible pairs constraint
+    # 1. Incompatibility check
     incompatible_staff = st.session_state.incompatible_pairs.get(staff_member["Name"], [])
     current_members = [m["Name"] for m in current_team]
     if any(name in current_members for name in incompatible_staff):
         return False
     
+    # 2. Minimum team size protection
+    team_sizes = {t: len(m) for t, m in st.session_state.team_assignments.items()}
+    min_size = min(team_sizes.values())
+    if len(current_team) - min_size >= 2:
+        return False
+    
     return True
 
 def team_assignment_page():
-    """Modified for 4 teams and auto-scroll"""
+    """Modified team assignment page with immediate updates"""
     st.title("Team Assignment Dashboard")
     st.markdown('<div class="scroll-target" id="top"></div>', unsafe_allow_html=True)
 
+    # Display teams
     cols = st.columns(4)
     team_colors = {
         "Security": "team-security",
@@ -349,22 +344,22 @@ def team_assignment_page():
 
     for idx, (team, members) in enumerate(st.session_state.team_assignments.items()):
         with cols[idx]:
-            if members:
-                st.markdown(f"""
-                    <div class='team-container {team_colors[team]}'>
-                        <h3>{team}</h3>
-                        <div class='members-list'>
-                            {"".join([f"<p>{m['Name']}</p>" for m in members])}
-                        </div>
+            count = len(members)
+            st.markdown(f"""
+                <div class='team-container {team_colors[team]}'>
+                    <h3>{team} ({count})</h3>
+                    <div class='members-list'>
+                        {"".join([f"<p>{m['Name']}</p>" for m in members])}
                     </div>
-                """, unsafe_allow_html=True)
+                </div>
+            """, unsafe_allow_html=True)
 
     st.markdown("### Available Staff Members")
     
     if st.session_state.available_staff.empty:
-        st.button("Download Screenshot", 
-                 help="Use browser screenshot tool (Ctrl+Shift+S/Cmd+Shift+S)")
+        st.button("Download Screenshot")
 
+    # Fixed category display for Floor 0-1
     categories = ["Leadership", "Diaspora", "Floor 0-1", "Floor 2", 
                 "Floor 3", "Floor 4", "Floor 5"]
     
@@ -373,12 +368,16 @@ def team_assignment_page():
             st.session_state.available_staff["Category"] == category
         ]
         if not staff_df.empty:
-            st.markdown(f"#### {category}")
+            st.markdown(f"#### {category.replace('0-1', '0 - 1')}")  # Better formatting
             cols = st.columns(6)
             for idx, (_, staff) in enumerate(staff_df.iterrows()):
                 with cols[idx % 6]:
                     if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
+                        # Immediate removal and UI update
+                        st.session_state.available_staff = st.session_state.available_staff[
+                            st.session_state.available_staff["Name"] != staff["Name"]
                         st.session_state.selected_staff = staff.to_dict()
+                        st.experimental_rerun()  # Force immediate UI update
                         assign_team_member()
 
 def standings_page():
@@ -437,49 +436,48 @@ def ai_champions_page():
             st.markdown(card_html, unsafe_allow_html=True)
 
 def assign_team_member():
-    """Updated assignment function with auto-scroll"""
+    """Improved assignment logic with better randomization"""
     staff = st.session_state.selected_staff
     
-    # Countdown animation
+    # Faster countdown with progress
     countdown = st.empty()
     for i in range(3, 0, -1):
         countdown.markdown(f"<div class='countdown'>{i}</div>", unsafe_allow_html=True)
-        time.sleep(1)
+        time.sleep(0.5)  # Reduced from 1s to 0.5s
     countdown.empty()
     
-    # Team selection logic
+    # Get suitable teams with intelligent sorting
     suitable_teams = [t for t in st.session_state.team_assignments 
                      if check_constraints(staff, t)]
-    assigned_team = (random.choice(suitable_teams) if suitable_teams 
-                    else min(st.session_state.team_assignments, 
-                           key=lambda t: len(st.session_state.team_assignments[t])))
+    
+    # Prioritize teams with fewer members
+    suitable_teams.sort(key=lambda t: len(st.session_state.team_assignments[t]))
+    
+    if suitable_teams:
+        # Weighted random choice favoring smaller teams
+        weights = [1/(len(st.session_state.team_assignments[t])+1) for t in suitable_teams]
+        assigned_team = random.choices(suitable_teams, weights=weights, k=1)[0]
+    else:
+        # Fallback to smallest team if no suitable teams
+        assigned_team = min(st.session_state.team_assignments,
+                          key=lambda t: len(st.session_state.team_assignments[t]))
     
     # Update team assignments
     st.session_state.team_assignments[assigned_team].append(staff)
     
-    # Success message with auto-removal
-    success_html = f"""
-    <div class='success-message'>
-        <h2>🎉 Success!</h2>
-        <p>{staff["Name"]} → {assigned_team}</p>
-    </div>
-    <script>
-        setTimeout(function() {{
-            var elements = document.getElementsByClassName('success-message');
-            while(elements.length > 0){{
-                elements[0].parentNode.removeChild(elements[0]);
-            }}
-        }}, 2000);
-    </script>
-    """
-    components.html(success_html, height=0)
+    # Visible success message
+    success = st.markdown(
+        f"""<div class='success-message'>
+            <h2>🎉 Success!</h2>
+            <p>{staff["Name"]} → {assigned_team}</p>
+        </div>""", 
+        unsafe_allow_html=True
+    )
+    time.sleep(1.5)
+    success.empty()
     
-    # Auto-scroll to top
-    components.html("""
-    <script>
-        window.parent.document.querySelector('.scroll-target').scrollIntoView();
-    </script>
-    """, height=0)
+    # Force UI update
+    st.experimental_rerun()
 
 # Navigation system
 pages = {
