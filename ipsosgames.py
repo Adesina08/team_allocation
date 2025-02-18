@@ -331,7 +331,16 @@ def check_constraints(staff_member, team):
 def team_assignment_page():
     """Modified team assignment page with immediate updates"""
     st.title("Team Assignment Dashboard")
-    st.markdown('<div class="scroll-target" id="top"></div>', unsafe_allow_html=True)
+# At the top of your page
+if "scroll_to_top" in st.query_params:
+    st.markdown(
+        """
+        <script>
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
     
     # Display teams
     cols = st.columns(4)
@@ -443,14 +452,9 @@ def assign_team_member():
     # Force UI update
     st.rerun()
     
-  # Auto-scroll to top
-    components.html("""
-    <script>
-        window.parent.document.querySelector('.scroll-target').scrollIntoView();
-    </script>
-    """, height=0)
-     # Force UI update
-    st.rerun()
+# After success message
+st.query_params["scroll_to_top"] = True
+st.rerun()
     
 def ai_champions_page():
     """Original AI Champions page preserved"""
