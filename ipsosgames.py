@@ -328,7 +328,7 @@ def check_constraints(staff_member, team):
     
     return True
 
-i want the page to auto scroll to the top of the page where the team containers are displayed:
+
 def team_assignment_page():
     """Modified team assignment page with immediate updates"""
     st.title("Team Assignment Dashboard")
