@@ -431,7 +431,6 @@ def assign_team_member():
     st.session_state.team_assignments[assigned_team].append(staff)
 
 # Your existing success message code
-    success = st.empty()
     success = st.markdown(
         f"""<div class='success-message'>
             <h2>🎉 Success!</h2>
@@ -440,9 +439,9 @@ def assign_team_member():
         unsafe_allow_html=True
     )
     time.sleep(2)
-    success.empty()
+    #success.empty()
     # Force UI update
-    #st.rerun()
+    st.rerun()
   # Auto-scroll to top
     components.html("""
     <script>
