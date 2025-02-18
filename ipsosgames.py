@@ -442,7 +442,7 @@ def assign_team_member():
     time.sleep(2)
     success.empty()
     # Force UI update
-    st.rerun()
+    #st.rerun()
   # Auto-scroll to top
     components.html("""
     <script>
