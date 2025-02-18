@@ -377,7 +377,7 @@ def team_assignment_page():
                         st.session_state.available_staff = st.session_state.available_staff[
                             st.session_state.available_staff["Name"] != staff["Name"]]
                         st.session_state.selected_staff = staff.to_dict()
-                        st.experimental_rerun()  # Force immediate UI update
+                        st.rerun()  # Force immediate UI update
                         assign_team_member()
 
 def standings_page():
@@ -477,7 +477,7 @@ def assign_team_member():
     success.empty()
     
     # Force UI update
-    st.experimental_rerun()
+    st.rerun()
 
 # Navigation system
 pages = {
