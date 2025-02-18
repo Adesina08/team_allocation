@@ -329,8 +329,6 @@ def check_constraints(staff_member, team):
     return True
 
 def team_assignment_page():
-    # Add this at the top of your page where you want to scroll to
-    st.markdown("<div id='top-of-page'></div>", unsafe_allow_html=True)
     """Modified team assignment page with immediate updates"""
     st.title("Team Assignment Dashboard")
     st.markdown('<div class="scroll-target" id="top"></div>', unsafe_allow_html=True)
@@ -433,15 +431,16 @@ def assign_team_member():
     st.session_state.team_assignments[assigned_team].append(staff)
 
 # Your existing success message code
-success = st.markdown(
-    f"""<div class='success-message'>
-        <h2>🎉 Success!</h2>
-        <p>{staff["Name"]} is a member of Team {assigned_team} 👍</p>
-    </div>""", 
-    unsafe_allow_html=True
-)
-time.sleep(2)
-success.empty()
+    # Visible success message
+    success = st.markdown(
+        f"""<div class='success-message'>
+            <h2>🎉 Success!</h2>
+            <p>{staff["Name"]} is a member of Team {assigned_team} 👍</p>
+        </div>""", 
+        unsafe_allow_html=True
+    )
+    time.sleep(2)
+    success.empty()
 
 # Modified auto-scroll code
 components.html(
