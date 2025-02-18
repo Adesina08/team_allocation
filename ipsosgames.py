@@ -431,8 +431,8 @@ def assign_team_member():
     st.session_state.team_assignments[assigned_team].append(staff)
 
 # Your existing success message code
-    # Visible success message
-    success = st.markdown(
+    success = st.empty()
+    success.markdown(
         f"""<div class='success-message'>
             <h2>🎉 Success!</h2>
             <p>{staff["Name"]} is a member of Team {assigned_team} 👍</p>
@@ -441,14 +441,13 @@ def assign_team_member():
     )
     time.sleep(2)
     success.empty()
-
-  # Auto-scroll
+    
+    # Auto-scroll
     components.html("""
     <script>
         window.parent.document.querySelector('.scroll-target').scrollIntoView();
     </script>
     """, height=0)
-    st.rerun()
 
 def ai_champions_page():
     """Original AI Champions page preserved"""
