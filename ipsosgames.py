@@ -441,6 +441,8 @@ def assign_team_member():
     )
     time.sleep(2)
     success.empty()
+    # Force UI update
+    st.rerun()
     
     # Auto-scroll
     components.html("""
@@ -448,9 +450,7 @@ def assign_team_member():
         window.parent.document.querySelector('.scroll-target').scrollIntoView();
     </script>
     """, height=0)
-# Force UI update
-    #st.rerun()
-
+    
 def ai_champions_page():
     """Original AI Champions page preserved"""
     st.title("Meet the AI Champions 🚀")
