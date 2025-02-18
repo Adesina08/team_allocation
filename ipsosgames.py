@@ -410,7 +410,16 @@ def assign_team_member():
     
     # Update team assignments
     st.session_state.team_assignments[assigned_team].append(staff)
-
+    
+  # Auto-scroll to top
+    components.html("""
+    <script>
+        window.parent.document.querySelector('.scroll-target').scrollIntoView();
+    </script>
+    """, height=0)
+    # Force UI update
+    st.rerun()
+    
 # Your existing success message code
     success = st.markdown(
         f"""<div class='success-message'>
@@ -421,14 +430,6 @@ def assign_team_member():
     )
     time.sleep(2)
     success.empty()
-  # Auto-scroll to top
-    components.html("""
-    <script>
-        window.parent.document.querySelector('.scroll-target').scrollIntoView();
-    </script>
-    """, height=0)
-    # Force UI update
-    st.rerun()
 
     
 def standings_page():
