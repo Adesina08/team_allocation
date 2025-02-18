@@ -443,21 +443,21 @@ def assign_team_member():
     time.sleep(2)
     success.empty()
         
-        components.html(
-            """
-            <script>
-                setTimeout(() => {
-                    const element = window.parent.document.getElementById('top-of-page');
-                    if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' });
-                    }
-                }, 100);
-            </script>
-            """,
-            height=0
+    components.html(
+        """
+        <script>
+            setTimeout(() => {
+                const element = window.parent.document.getElementById('top-of-page');
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        </script>
+        """,
+        height=0
         )
         
-        st.rerun()
+    st.rerun()
 
 def ai_champions_page():
     """Original AI Champions page preserved"""
