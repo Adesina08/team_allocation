@@ -332,6 +332,7 @@ def check_constraints(staff_member, team):
 def team_assignment_page():
     """Modified team assignment page with immediate updates"""
     st.title("Team Assignment Dashboard")
+    # Ensure that there is an element to scroll to:
     st.markdown("<div class='scroll-target'></div>", unsafe_allow_html=True)
     
     # Display teams
@@ -346,49 +347,19 @@ def team_assignment_page():
     for idx, (team, members) in enumerate(st.session_state.team_assignments.items()):
         with cols[idx]:
             count = len(members)
-        # Conditionally show members list only if there are members
-            members_html = ""
-            if members:
-                members_html = f"""
+            st.markdown(f"""
+                <div class='team-container {team_colors[team]}'>
+                    <h3>{team} ({count})</h3>
                     <div class='members-list'>
                         {"".join([f"<p>{m['Name']}</p>" for m in members])}
                     </div>
-                """
-        st.markdown(f"""
-            <div class='team-container {team_colors[team]}'>
-                <h3>{team} ({count})</h3>
-                {members_html}
-            </div>
-        """, unsafe_allow_html=True)
+                </div>
+            """, unsafe_allow_html=True)
 
     st.markdown("### Available Staff Members")
     
     if st.session_state.available_staff.empty:
-        # Prepare data for export
-        data = []
-        for team_name, members in st.session_state.team_assignments.items():
-            for member in members:
-                row = member.copy()
-                row["Team"] = team_name
-                data.append(row)
-        
-        if data:
-            df_export = pd.DataFrame(data)
-            # Reorder columns for better readability
-            columns = ["Team"] + [col for col in df_export.columns if col != "Team"]
-            df_export = df_export[columns]
-            
-            # Convert to CSV for download
-            csv = df_export.to_csv(index=False).encode("utf-8")
-            
-            # Add download button
-            st.download_button(
-                label="📥 Download Full Team Assignments",
-                data=csv,
-                file_name="ipsos_games_teams.csv",
-                mime="text/csv",
-                help="Download complete team assignments with all staff details"
-            )
+        st.button("Download Screenshot")
 
     # Fixed category display for Floor 0-1
     categories = ["Leadership", "Diaspora", "Floor 0-1", "Floor 2", 
