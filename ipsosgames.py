@@ -394,55 +394,50 @@ def team_assignment_page():
                             assign_team_member()
 
 def assign_team_member():
-    """Improved assignment logic with better randomization"""
+    """Assignment logic with free and fair randomization while observing constraints."""
     staff = st.session_state.selected_staff
-    
-    # Faster countdown with progress
+
+    # Countdown for dramatic effect
     countdown = st.empty()
     for i in range(3, 0, -1):
         countdown.markdown(f"<div class='countdown'>{i}</div>", unsafe_allow_html=True)
-        time.sleep(1)  # Reduced from 1s to 0.5s
+        time.sleep(1)
     countdown.empty()
+
+    # Determine eligible teams based solely on constraints
+    eligible_teams = [team for team in st.session_state.team_assignments if check_constraints(staff, team)]
     
-    # Get suitable teams with intelligent sorting
-    suitable_teams = [t for t in st.session_state.team_assignments 
-                     if check_constraints(staff, t)]
-    
-    # Prioritize teams with fewer members
-    suitable_teams.sort(key=lambda t: len(st.session_state.team_assignments[t]))
-    
-    if suitable_teams:
-        # Weighted random choice favoring smaller teams
-        weights = [1/(len(st.session_state.team_assignments[t])+1) for t in suitable_teams]
-        assigned_team = random.choices(suitable_teams, weights=weights, k=1)[0]
+    if eligible_teams:
+        # Choose uniformly at random among eligible teams for fairness
+        assigned_team = random.choice(eligible_teams)
     else:
-        # Fallback to smallest team if no suitable teams
-        assigned_team = min(st.session_state.team_assignments,
-                          key=lambda t: len(st.session_state.team_assignments[t]))
+        # Fallback: assign to the team with the smallest number of members
+        assigned_team = min(st.session_state.team_assignments, key=lambda t: len(st.session_state.team_assignments[t]))
     
     # Update team assignments
     st.session_state.team_assignments[assigned_team].append(staff)
     
-  # Auto-scroll to top
+    # Auto-scroll back to the top
     components.html("""
     <script>
         window.parent.document.querySelector('.scroll-target').scrollIntoView();
     </script>
     """, height=0)
-
     
-# Your existing success message code
+    # Show a success message
     success = st.markdown(
         f"""<div class='success-message'>
             <h2>🎉 Success!</h2>
-            <p>{staff["Name"]} is a member of Team {assigned_team} 👍</p>
+            <p>{staff["Name"]} has been assigned to Team {assigned_team}!👍</p>
         </div>""", 
         unsafe_allow_html=True
     )
     time.sleep(2)
     success.empty()
+    
     # Force UI update
     st.rerun()
+
     
 def standings_page():
     """New standings page"""
