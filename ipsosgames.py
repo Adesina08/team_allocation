@@ -408,7 +408,7 @@ def assign_team_member():
     countdown = st.empty()
     for i in range(3, 0, -1):
         countdown.markdown(f"<div class='countdown'>{i}</div>", unsafe_allow_html=True)
-        time.sleep(1)  # Reduced from 1s to 0.5s
+        time.sleep(1.25)  # Reduced from 1s to 0.5s
     countdown.empty()
     
     # Get suitable teams with intelligent sorting
@@ -434,7 +434,7 @@ def assign_team_member():
     success = st.markdown(
         f"""<div class='success-message'>
             <h2>🎉 Success!</h2>
-            <p>{staff["Name"]} → {assigned_team}</p>
+            <p>{staff["Name"]} is a member of {assigned_team} 👍</p>
         </div>""", 
         unsafe_allow_html=True
     )
@@ -487,7 +487,7 @@ def ai_champions_page():
         with cols[i % 3]:
             img_base64 = get_image_base64(member["image"])
             # Create the card HTML with proper structure and styling
-            card_html = f("""
+            card_html = f"""
             <div class="team-member-card">
                 <div class="member-photo">
                     <img src="data:image/jpeg;base64,{img_base64}" alt="{member['name']}" />
@@ -495,7 +495,7 @@ def ai_champions_page():
                 <div class="member-name">{member["name"]}</div>
                 <div class="member-email">{member["email"]}</div>
             </div>
-            """)
+            """
             st.markdown(card_html, unsafe_allow_html=True)
 
 # Navigation system
