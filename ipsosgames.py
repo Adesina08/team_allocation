@@ -330,13 +330,10 @@ def check_constraints(staff_member, team):
 
 def team_assignment_page():
     # Add this at the top of your page where you want to scroll to
-st.markdown("<div id='top-of-page'></div>", unsafe_allow_html=True)
+    st.markdown("<div id='top-of-page'></div>", unsafe_allow_html=True)
     """Modified team assignment page with immediate updates"""
     st.title("Team Assignment Dashboard")
     st.markdown('<div class="scroll-target" id="top"></div>', unsafe_allow_html=True)
-    
-    # Put this right before your team containers section
-    st.markdown("<div id='top-of-page'></div>", unsafe_allow_html=True)
     
     # Display teams
     cols = st.columns(4)
