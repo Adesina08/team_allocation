@@ -444,12 +444,12 @@ def assign_team_member():
     # Force UI update
     st.rerun()
     
-    # Auto-scroll
-    components.html("""
-    <script>
-        window.parent.document.querySelector('.scroll-target').scrollIntoView();
-    </script>
-    """, height=0)
+    # # Auto-scroll
+    # components.html("""
+    # <script>
+    #     window.parent.document.querySelector('.scroll-target').scrollIntoView();
+    # </script>
+    # """, height=0)
     
 def ai_champions_page():
     """Original AI Champions page preserved"""
