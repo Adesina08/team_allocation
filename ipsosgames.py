@@ -440,7 +440,6 @@ def assign_team_member():
 # After successful assignment
 st.session_state.should_scroll = True  # Trigger scroll on next render
 # Force UI update using st.rerun()
-st.rerun()
 
     
 def standings_page():
