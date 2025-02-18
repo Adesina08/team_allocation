@@ -431,6 +431,7 @@ def assign_team_member():
     st.session_state.team_assignments[assigned_team].append(staff)
 
 # Your existing success message code
+    success = st.empty()
     success = st.markdown(
         f"""<div class='success-message'>
             <h2>🎉 Success!</h2>
