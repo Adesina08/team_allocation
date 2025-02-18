@@ -433,13 +433,13 @@ def assign_team_member():
     # Update team assignments
     st.session_state.team_assignments[assigned_team].append(staff)
     
-        success = st.markdown(
-            f"""<div class='success-message'>
-                <h2>🎉 Success!</h2>
-                <p>{staff["Name"]} is a member of Team {assigned_team} 👍</p>
-            </div>""", 
-            unsafe_allow_html=True
-        )
+    success = st.markdown(
+        f"""<div class='success-message'>
+            <h2>🎉 Success!</h2>
+            <p>{staff["Name"]} is a member of Team {assigned_team} 👍</p>
+        </div>""", 
+        unsafe_allow_html=True
+    )
         time.sleep(2)
         success.empty()
         
