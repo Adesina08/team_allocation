@@ -433,31 +433,38 @@ def assign_team_member():
     # Update team assignments
     st.session_state.team_assignments[assigned_team].append(staff)
     
-    success = st.markdown(
-        f"""<div class='success-message'>
-            <h2>🎉 Success!</h2>
-            <p>{staff["Name"]} is a member of Team {assigned_team} 👍</p>
-        </div>""", 
-        unsafe_allow_html=True
-    )
-    time.sleep(2)
-    success.empty()
-        
-    components.html(
-        """
-        <script>
-            setTimeout(() => {
-                const element = window.parent.document.getElementById('top-of-page');
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                }
-            }, 100);
-        </script>
-        """,
-        height=0
-        )
-        
-    st.rerun()
+# Add this at the top of your page where you want to scroll to
+st.markdown("<div id='top-of-page'></div>", unsafe_allow_html=True)
+
+# Your existing success message code
+success = st.markdown(
+    f"""<div class='success-message'>
+        <h2>🎉 Success!</h2>
+        <p>{staff["Name"]} is a member of Team {assigned_team} 👍</p>
+    </div>""", 
+    unsafe_allow_html=True
+)
+time.sleep(2)
+success.empty()
+
+# Modified auto-scroll code
+components.html(
+    """
+    <script>
+        // Wait for the element to be available
+        setTimeout(() => {
+            const element = window.parent.document.getElementById('top-of-page');
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 100);
+    </script>
+    """,
+    height=0
+)
+
+# Force UI update
+st.rerun()
 
 def ai_champions_page():
     """Original AI Champions page preserved"""
