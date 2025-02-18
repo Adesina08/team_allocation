@@ -380,27 +380,6 @@ def team_assignment_page():
                         st.session_state.selected_staff = staff.to_dict()
                         #st.rerun()  # Force immediate UI update
                         assign_team_member()
-
-def standings_page():
-    """New standings page"""
-    st.title("Team Standings")
-    
-    try:
-        standings = pd.read_csv("standings.csv")
-        st.markdown("### Current Rankings")
-        st.dataframe(standings.style.highlight_max(subset="POINTS", color='#d4edda'), 
-                    use_container_width=True)
-        
-        st.markdown("### Upcoming Games")
-        st.write("""
-        - Monday: Security vs Seamless
-        - Tuesday: Social vs Sassy
-        - Wednesday: Semi-finals
-        - Friday: Grand Finale
-        """)
-    except FileNotFoundError:
-        st.error("Standings data will be updated weekly")
-
 def assign_team_member():
     """Improved assignment logic with better randomization"""
     staff = st.session_state.selected_staff
@@ -441,7 +420,7 @@ def assign_team_member():
     )
     time.sleep(2)
     success.empty()
-    #st.rerun()
+    st.rerun()
     # Auto-scroll to top by scrolling the element with class 'scroll-target' into view
     components.html(
         """
@@ -457,9 +436,29 @@ def assign_team_member():
         """,
         height=0
     )
-    
     # Force UI update
-    st.rerun()
+    st.experimental_rerun()
+    
+def standings_page():
+    """New standings page"""
+    st.title("Team Standings")
+    
+    try:
+        standings = pd.read_csv("standings.csv")
+        st.markdown("### Current Rankings")
+        st.dataframe(standings.style.highlight_max(subset="POINTS", color='#d4edda'), 
+                    use_container_width=True)
+        
+        st.markdown("### Upcoming Games")
+        st.write("""
+        - Monday: Security vs Seamless
+        - Tuesday: Social vs Sassy
+        - Wednesday: Semi-finals
+        - Friday: Grand Finale
+        """)
+    except FileNotFoundError:
+        st.error("Standings data will be updated weekly")
+
     
 def ai_champions_page():
     """Original AI Champions page preserved"""
