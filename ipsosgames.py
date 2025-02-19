@@ -300,15 +300,14 @@ def home_page():
         ]
         create_image_grid(fun_moments_images)
 
-    st.markdown("""
-    <div class='rules-container'>
-        <h2 class='rules-header'>📋 Team Allocation Rules</h2>
-        </div>
-        <div class='rule-item'>
-            <strong>Random Assignment:</strong> Team allocation is randomized among eligible teams
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    # st.markdown("""
+    # <div class='rules-container'>
+    #     <h2 class='rules-header'>📋 Team Allocation Rules</h2>
+    #     <div class='rule-item'>
+    #         <strong>Deterministic Assignment:</strong> Teams are allocated using a penalty‐score algorithm to minimize similarities.
+    #     </div>
+    # </div>
+    # """, unsafe_allow_html=True)
 
 def check_constraints(staff_member, team):
     """Check only incompatible pairs and team balance"""
@@ -320,14 +319,28 @@ def check_constraints(staff_member, team):
     if any(name in current_members for name in incompatible_staff):
         return False
     
-    # 2. Minimum team size protection
-    team_sizes = {t: len(m) for t, m in st.session_state.team_assignments.items()}
-    min_size = min(team_sizes.values())
-    if len(current_team) - min_size >= 2:
-        return False
-    
     return True
 
+def calculate_best_team(staff, eligible_teams):
+    """
+    Calculate a penalty score for each eligible team based on matching attributes:
+      - "Group in previous game" (×5)
+      - "Level" (×3)
+      - "Office floor" (×2)
+      - "Gender" (×2)
+    Returns the team (from eligible_teams) with the lowest penalty.
+    """
+    team_scores = []
+    for team in eligible_teams:
+        members = st.session_state.team_assignments[team]
+        prev_group_count = sum(1 for m in members if m.get("Group in previous game") == staff.get("Group in previous game"))
+        level_count = sum(1 for m in members if m.get("Level") == staff.get("Level"))
+        office_floor_count = sum(1 for m in members if m.get("Office floor") == staff.get("Office floor"))
+        gender_count = sum(1 for m in members if m.get("Gender") == staff.get("Gender"))
+        penalty = (prev_group_count * 5) + (level_count * 3) + (office_floor_count * 2) + (gender_count * 2)
+        team_scores.append((penalty, len(members), team))
+    team_scores.sort(key=lambda x: (x[0], x[1], x[2]))
+    return team_scores[0][2]
 
 def team_assignment_page():
     """Modified team assignment page with immediate updates"""
@@ -394,7 +407,7 @@ def team_assignment_page():
                             assign_team_member()
 
 def assign_team_member():
-    """Assignment logic with free and fair randomization while observing constraints."""
+    """Assignment logic with the deterministic penalty algorithm."""
     staff = st.session_state.selected_staff
 
     # Countdown for dramatic effect
@@ -404,18 +417,18 @@ def assign_team_member():
         time.sleep(1.5)
     countdown.empty()
 
-    # Determine eligible teams based solely on constraints
+    # Determine eligible teams based on constraints
     eligible_teams = [team for team in st.session_state.team_assignments if check_constraints(staff, team)]
     
     if eligible_teams:
-        # Choose uniformly at random among eligible teams for fairness
-        assigned_team = random.choice(eligible_teams)
+        # Use the penalty algorithm to choose the best team
+        assigned_team = calculate_best_team(staff, eligible_teams)
     else:
         # Fallback: assign to the team with the smallest number of members
         assigned_team = min(st.session_state.team_assignments, key=lambda t: len(st.session_state.team_assignments[t]))
     
     # Update team assignments
-    st.session_state.team_assignments[assigned_team].append(staff)
+    st.session_state.team_assignments[assigned_team].append(st.session_state.selected_staff)
     
     # Auto-scroll back to the top
     components.html("""
@@ -438,7 +451,6 @@ def assign_team_member():
     # Force UI update
     st.rerun()
 
-    
 def standings_page():
     """New standings page"""
     st.title("Team Standings")
@@ -459,7 +471,6 @@ def standings_page():
     except FileNotFoundError:
         st.error("Standings data will be updated weekly")
 
-    
 def ai_champions_page():
     """Original AI Champions page preserved"""
     st.title("Meet the AI Champions 🚀")
