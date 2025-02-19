@@ -335,7 +335,7 @@ def calculate_best_team(staff, eligible_teams):
         members = st.session_state.team_assignments[team]
         prev_group_count = sum(1 for m in members if m.get("Group in previous game") == staff.get("Group in previous game"))
         level_count = sum(1 for m in members if m.get("Level") == staff.get("Level"))
-        office_floor_count = sum(1 for m in members if m.get("Office floor") == staff.get("Office floor"))
+        office_floor_count = sum(1 for m in members if m.get("Category") == staff.get("Category"))
         gender_count = sum(1 for m in members if m.get("Gender") == staff.get("Gender"))
         penalty = (prev_group_count * 5) + (level_count * 3) + (office_floor_count * 2) + (gender_count * 2)
         team_scores.append((penalty, len(members), team))
