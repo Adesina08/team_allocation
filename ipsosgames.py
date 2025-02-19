@@ -401,7 +401,7 @@ def assign_team_member():
     countdown = st.empty()
     for i in range(3, 0, -1):
         countdown.markdown(f"<div class='countdown'>{i}</div>", unsafe_allow_html=True)
-        time.sleep(1)
+        time.sleep(0.5)
     countdown.empty()
 
     # Determine eligible teams based solely on constraints
@@ -432,7 +432,7 @@ def assign_team_member():
         </div>""", 
         unsafe_allow_html=True
     )
-    time.sleep(2)
+    time.sleep(1)
     success.empty()
     
     # Force UI update
