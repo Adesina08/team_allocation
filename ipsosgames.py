@@ -319,6 +319,12 @@ def check_constraints(staff_member, team):
     if any(name in current_members for name in incompatible_staff):
         return False
     
+    # # 2. Minimum team size protection
+    # team_sizes = {t: len(m) for t, m in st.session_state.team_assignments.items()}
+    # min_size = min(team_sizes.values())
+    # if len(current_team) - min_size >= 2:
+    #     return False
+    
     return True
 
 def calculate_best_team(staff, eligible_teams):
