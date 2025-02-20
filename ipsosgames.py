@@ -280,7 +280,7 @@ def home_page():
         st.markdown("""
             <div style='padding:15px; background:#f8f9fa; border-radius:5px; margin-bottom:15px;'>
                 <h4 style='margin-top:0; color:#2C3E50;'>Overall Champions 2024: Team Integrity</h4>
-                <p style='margin:5px 0;'>Team Captain: Micheal Dukumnsin</p>
+                <p style='margin:5px 0;'>Team Captain: Michael DUMKWUSON 🥇</p>
             </div>
         """, unsafe_allow_html=True)
         st.image("images/moment_1_page-0012.jpg", use_container_width=True)
