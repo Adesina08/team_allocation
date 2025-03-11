@@ -142,7 +142,7 @@ st.markdown(
     """
     <div class='venue' style='text-align: center; font-family: "Inter", sans-serif; font-size: 1.2rem; margin: 0.5rem 0 1.5rem; color: #cccccc;'>
      🏢 Venue: The Kulture Yard <br>
-     📍 Address: 2b Abba Johnston Crescent, Adeniyi Jones, Ikeja, Nigeria 
+     📍 Address: 2b Abba Johnson Crescent, Adeniyi Jones, Ikeja, Nigeria 
     </div>
     """, 
     unsafe_allow_html=True
