@@ -135,7 +135,7 @@ st.markdown(css, unsafe_allow_html=True)
 st.markdown("<div class='header'> 🎉 Dare's Sent Forth Countdown 🎉</div>", unsafe_allow_html=True)
 
 # Target datetime
-target_datetime = datetime(2025, 3, 13, 14, 00, 00)
+target_datetime = datetime(2025, 3, 13, 16, 00, 00)
 st.markdown(f"<div class='subheader'>Countdown to: {target_datetime.strftime('%B %d, %Y at %H:%M:%S')}</div>", unsafe_allow_html=True)
 
 st.markdown(
