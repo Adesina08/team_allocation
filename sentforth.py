@@ -138,6 +138,17 @@ st.markdown("<div class='header'> 🎉 Dare's Sent Forth Countdown 🎉</div>", 
 target_datetime = datetime(2025, 3, 13, 14, 00, 00)
 st.markdown(f"<div class='subheader'>Countdown to: {target_datetime.strftime('%B %d, %Y at %H:%M:%S')}</div>", unsafe_allow_html=True)
 
+st.markdown(
+    """
+    <div class='venue' style='text-align: center; font-family: "Inter", sans-serif; font-size: 1.2rem; margin: 0.5rem 0 1.5rem; color: #cccccc;'>
+     🏢 Venue: The Kulture Yard <br>
+     📍 Address: 2b Abba Johnston Crescent, Adeniyi Jones, Ikeja, Nigeria 
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
+
+
 # Create a placeholder for the countdown display
 timer_placeholder = st.empty()
 
