@@ -458,24 +458,191 @@ def assign_team_member():
     st.rerun()
 
 def standings_page():
-    """New standings page"""
-    st.title("Team Standings")
+    """Enhanced Standings Page with Visual Leaderboard"""
+    st.title("🏆 Team Standings")
     
-    try:
-        standings = pd.read_csv("standings.csv")
-        st.markdown("### Current Rankings")
-        st.dataframe(standings.style.highlight_max(subset="POINTS", color='#d4edda'), 
-                    use_container_width=True)
+    # Custom CSS for standings
+    st.markdown("""
+    <style>
+        .standings-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
         
-        st.markdown("### Upcoming Games")
-        st.write("""
-        - Monday: Security vs Seamless
-        - Tuesday: Social vs Sassy
-        - Wednesday: Semi-finals
-        - Friday: Grand Finale
-        """)
+        .team-card {
+            border-radius: 15px;
+            padding: 20px;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        .rank-badge {
+            font-size: 24px;
+            font-weight: bold;
+            width: 60px;
+            text-align: center;
+            margin-right: 25px;
+        }
+        
+        .team-info {
+            flex-grow: 1;
+            min-width: 200px;
+        }
+        
+        .team-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+        
+        .form-indicators {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+            padding-left: 20px;
+        }
+        
+        .form-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .win { background: #4CAF50; color: white; }
+        .loss { background: #F44336; color: white; }
+        .draw { background: #FFC107; color: black; }
+    </style>
+    """, unsafe_allow_html=True)
+
+    try:
+        standings = pd.read_csv("standings.csv").sort_values(by='POINTS', ascending=False)
+        standings['PROGRESS'] = standings['POINTS'] / standings['POINTS'].max() * 100
+        
+        # Generate form indicators (example data - modify according to your data)
+        form_data = {
+            'Team Security': ['W', 'W', 'L', 'W', 'D'],
+            'Team Speed': ['L', 'W', 'W', 'L', 'W'],
+            'Team Substance': ['W', 'L', 'D', 'W', 'W'],
+            'Team Simplicity': ['D', 'W', 'W', 'W', 'L']
+        }
+        
+        container = st.container()
+        with container:
+            st.markdown("<div class='standings-container'>", unsafe_allow_html=True)
+            
+            for idx, (_, row) in enumerate(standings.iterrows(), 1):
+                team_class = {
+                    'Team Security': 'team-security',
+                    'Team Speed': 'team-speed',
+                    'Team Substance': 'team-substance',
+                    'Team Simplicity': 'team-simplicity'
+                }.get(row['TEAM'], '')
+                
+                form = form_data.get(row['TEAM'], [])
+                
+                st.markdown(f"""
+                <div class="team-card {team_class}">
+                    <div class="rank-badge">
+                        #{idx}
+                        {"🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else ""}
+                    </div>
+                    <div class="team-info">
+                        <h3 style="margin:0 0 5px 0; color: {'white' if idx <=3 else 'inherit'}">{row['TEAM']}</h3>
+                        <div class="team-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">{row['POINTS']}</div>
+                                <div class="stat-label">POINTS</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{row['WINS']}</div>
+                                <div class="stat-label">WINS</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{row['LOSSES']}</div>
+                                <div class="stat-label">LOSSES</div>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {row['PROGRESS']}%; 
+                                background: {'white' if idx <=3 else 'var(--progress-color)'}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-indicators">
+                        {''.join([f'<div class="form-dot {res.lower()}">{res}</div>' for res in form[-5:]])}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+            
+        st.markdown("---")
+        st.markdown("""
+        <div style="display: flex; justify-content: space-between; padding: 0 20px;">
+            <div><span class="form-dot win">W</span> Win</div>
+            <div><span class="form-dot loss">L</span> Loss</div>
+            <div><span class="form-dot draw">D</span> Draw</div>
+        </div>
+        """, unsafe_allow_html=True)
+
     except FileNotFoundError:
-        st.error("Standings data will be updated weekly")
+        st.error("Standings data will be updated after the first games!")
+        st.image("images/coming_soon.jpg", use_container_width=True)
+
+    st.markdown("---")
+    with st.expander("📅 Upcoming Schedule"):
+        st.write("""
+        ### Next Week's Games
+        | Date       | Matchup                  | Venue       |
+        |------------|--------------------------|-------------|
+        | Mon 15 Sep | Security vs Speed        | Main Arena  |
+        | Tue 16 Sep | Substance vs Simplicity  | Court 2     |
+        | Wed 17 Sep | Speed vs Substance       | Main Arena  |
+        | Fri 19 Sep | Championship Semi-Finals | Stadium     |
+        """)
 
 def ai_champions_page():
     """Original AI Champions page preserved"""
