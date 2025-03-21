@@ -519,7 +519,7 @@ def standings_page():
             
             with st.expander(f"Gameweek {gw} - {gw_date}", expanded=False):
                 # Podium Display
-                cols = st.columns([1, 2, 1])
+                cols = st.columns([1, 1, 1])
                 podium_positions = {1: cols[1], 2: cols[0], 3: cols[2]}
                 
                 for pos in [1, 2, 3]:
