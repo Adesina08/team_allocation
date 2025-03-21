@@ -54,6 +54,104 @@ if "available_staff" not in st.session_state:
 st.markdown(
     """
 <style>
+    /* Add responsive meta tag */
+    meta[name="viewport"] {
+        content: "width=device-width, initial-scale=1.0";
+    }
+
+    /* Responsive grid layouts */
+    .gallery-container, .fun-moments-grid, .staff-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    /* Responsive team containers */
+    @media (max-width: 768px) {
+        .stButton>button {
+        min-height: 48px;
+        padding: 12px 24px;
+    }
+}
+        
+        .member-card {
+            padding: 10px;
+            margin: 5px 0;
+        }
+        
+        .gallery-item, .team-member-card {
+            margin: 10px 0;
+        }
+        
+        /* Stack columns on mobile */
+        .st-emotion-cache-1v0mbdj {
+            flex-direction: column;
+        }
+    }
+
+    /* Mobile-first adjustments */
+    @media (max-width: 480px) {
+        .member-photo {
+            width: 100px;
+            height: 100px;
+        }
+        
+        .rules-header {
+            font-size: 1.4em;
+        }
+        
+        .countdown {
+            font-size: 60px;
+        }
+        
+        /* Adjust podium layout */
+        .st-emotion-cache-1y4p8pa {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+    }
+
+    /* Responsive tables */
+    .stDataFrame {
+        overflow-x: auto;
+        display: block;
+    }
+
+    /* Flexible images */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Responsive text sizes */
+    h1 { font-size: 2rem !important; }
+    h2 { font-size: 1.75rem !important; }
+    h3 { font-size: 1.5rem !important; }
+    
+    @media (max-width: 768px) {
+        h1 { font-size: 1.75rem !important; }
+        h2 { font-size: 1.5rem !important; }
+        h3 { font-size: 1.25rem !important; }
+    }
+
+    /* Adjust team assignment columns */
+    @media (max-width: 992px) {
+        .team-assignment-columns {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 600px) {
+        .team-assignment-columns {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Responsive buttons */
+    .stButton>button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+    
     /* Updated Team Colors */
     .team-security {
         background: linear-gradient(135deg, #0000FF 0%, #00008B 100%); /* Blue */
@@ -250,31 +348,28 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-def get_image_base64(image_path):
-    """Convert image to base64 string"""
+def get_image_base64(image_path, size=(300, 300)):
     try:
+        img = Image.open(image_path)
+        img.thumbnail(size)
         with open(image_path, "rb") as img_file:
             return base64.b64encode(img_file.read()).decode()
     except Exception as e:
         print(f"Error loading image {image_path}: {e}")
         return None
 
-def create_image_grid(images, images_per_row=3):
-    """Create image grid (original implementation preserved)"""
-    num_rows = math.ceil(len(images) / images_per_row)
-    for row in range(num_rows):
-        cols = st.columns(images_per_row)
-        for col in range(images_per_row):
-            idx = row * images_per_row + col
-            if idx < len(images):
-                with cols[col]:
-                    st.image(images[idx], use_container_width=True)
+def create_image_grid(images):
+    """Responsive image grid"""
+    cols = st.columns((1, 1, 1))  # 3 columns by default
+    for idx, image in enumerate(images):
+        with cols[idx % 3]:
+            st.image(image, use_container_width=True)
 
 def home_page():
-    """Original home page with modifications for new teams"""
+    """Responsive home page"""
     st.title("Welcome to Ipsos Games 2025 🎮")
-    col1, col2 = st.columns(2)
-
+    
+    col1, col2 = st.columns((1, 1))  # Equal width columns
     with col1:
         st.markdown("### 🏆 Previous Winners")
         st.markdown("""
@@ -396,16 +491,16 @@ def team_assignment_page():
         categories = ["Leadership", "Diaspora", "Floor 0-1", "Floor 2", 
                       "Floor 3", "Floor 4", "Floor 5"]
     
-        for category in categories:
-            staff_df = st.session_state.available_staff[
-                st.session_state.available_staff["Category"] == category
-            ]
-            if not staff_df.empty:
-                st.markdown(f"#### {category.replace('0-1', '0 - 1')}")  # Better formatting
-                cols = st.columns(6)
-                for idx, (_, staff) in enumerate(staff_df.iterrows()):
-                    with cols[idx % 6]:
-                        if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
+    for category in categories:
+        staff_df = st.session_state.available_staff[
+            st.session_state.available_staff["Category"] == category
+        ]
+        if not staff_df.empty:
+            st.markdown(f"#### {category.replace('0-1', '0 - 1')}")
+            cols = st.columns((1, 1, 1))  # 3 columns
+            for idx, (_, staff) in enumerate(staff_df.iterrows()):
+                with cols[idx % 3]:  # Changed from 6 to 3 columns
+                    if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
                             # Immediate removal and UI update
                             st.session_state.available_staff = st.session_state.available_staff[
                                 st.session_state.available_staff["Name"] != staff["Name"]]
@@ -472,7 +567,7 @@ def standings_page():
         current_gw_data = gameweeks[gameweeks['Gameweek'] == latest_gw]
         
         # Proper ordering: 1st, 2nd, 3rd, 4th
-        cols = st.columns(4)
+        cols = st.columns((1, 1, 1, 1))  # Equal width columns
         positions = {
             1: (cols[0], "🥇", "#FFD700"),
             2: (cols[1], "🥈", "#C0C0C0"),
@@ -630,9 +725,9 @@ def ai_champions_page():
         },
     ]
 
-    cols = st.columns(3)
+    cols = st.columns((1, 1))  # 2 columns instead of 3 for mobile
     for i, member in enumerate(team_members):
-        with cols[i % 3]:
+        with cols[i % 2]:  # Changed from 3 to 2
             img_base64 = get_image_base64(member["image"])
             # Create the card HTML with proper structure and styling
             card_html = f"""
