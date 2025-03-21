@@ -32,7 +32,7 @@ if "team_assignments" not in st.session_state:
         "Team Security": [],
         "Team Speed": [],
         "Team Substance": [],
-        "Sassy": [],
+        "Team Simplicity": [],
     }
 if "available_staff" not in st.session_state:
     excel_file_path = "staffs.xlsx"
