@@ -458,117 +458,13 @@ def assign_team_member():
     st.rerun()
 
 def standings_page():
-    """Enhanced Standings Page with Visual Leaderboard"""
+    """Enhanced Standings Page with Placement Tracking"""
     st.title("🏆 Team Standings")
     
-    # Custom CSS for standings
-    st.markdown("""
-    <style>
-        .standings-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 25px;
-        }
-        
-        .team-card {
-            border-radius: 15px;
-            padding: 20px;
-            margin: 5px 0;
-            display: flex;
-            align-items: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .team-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        }
-        
-        .rank-badge {
-            font-size: 24px;
-            font-weight: bold;
-            width: 60px;
-            text-align: center;
-            margin-right: 25px;
-        }
-        
-        .team-info {
-            flex-grow: 1;
-            min-width: 200px;
-        }
-        
-        .team-stats {
-            display: flex;
-            gap: 30px;
-            margin-top: 10px;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        .progress-bar {
-            height: 8px;
-            background: rgba(0,0,0,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 15px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            transition: width 0.5s ease;
-        }
-        
-        .form-indicators {
-            display: flex;
-            gap: 8px;
-            margin-left: auto;
-            padding-left: 20px;
-        }
-        
-        .form-dot {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        
-        .win { background: #4CAF50; color: white; }
-        .loss { background: #F44336; color: white; }
-        .draw { background: #FFC107; color: black; }
-    </style>
-    """, unsafe_allow_html=True)
-
     try:
         standings = pd.read_csv("standings.csv").sort_values(by='POINTS', ascending=False)
         standings['PROGRESS'] = standings['POINTS'] / standings['POINTS'].max() * 100
-        
-        # Generate form indicators (example data - modify according to your data)
-        form_data = {
-            'Team Security': ['W', 'W', 'L', 'W', 'D'],
-            'Team Speed': ['L', 'W', 'W', 'L', 'W'],
-            'Team Substance': ['W', 'L', 'D', 'W', 'W'],
-            'Team Simplicity': ['D', 'W', 'W', 'W', 'L']
-        }
-        
+
         container = st.container()
         with container:
             st.markdown("<div class='standings-container'>", unsafe_allow_html=True)
@@ -580,8 +476,6 @@ def standings_page():
                     'Team Substance': 'team-substance',
                     'Team Simplicity': 'team-simplicity'
                 }.get(row['TEAM'], '')
-                
-                form = form_data.get(row['TEAM'], [])
                 
                 st.markdown(f"""
                 <div class="team-card {team_class}">
@@ -597,12 +491,24 @@ def standings_page():
                                 <div class="stat-label">POINTS</div>
                             </div>
                             <div class="stat-item">
-                                <div class="stat-value">{row['WINS']}</div>
-                                <div class="stat-label">WINS</div>
+                                <div class="stat-value">{row['WINS']}-{row['LOSSES']}</div>
+                                <div class="stat-label">RECORD</div>
                             </div>
                             <div class="stat-item">
-                                <div class="stat-value">{row['LOSSES']}</div>
-                                <div class="stat-label">LOSSES</div>
+                                <div class="stat-value">{row['1ST']}</div>
+                                <div class="stat-label">1ST PLACES</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{row['2ND']}</div>
+                                <div class="stat-label">2ND PLACES</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{row['3RD']}</div>
+                                <div class="stat-label">3RD PLACES</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{row['4TH']}</div>
+                                <div class="stat-label">4TH PLACES</div>
                             </div>
                         </div>
                         <div class="progress-bar">
@@ -611,38 +517,35 @@ def standings_page():
                             </div>
                         </div>
                     </div>
-                    <div class="form-indicators">
-                        {''.join([f'<div class="form-dot {res.lower()}">{res}</div>' for res in form[-5:]])}
-                    </div>
                 </div>
                 """, unsafe_allow_html=True)
             
             st.markdown("</div>", unsafe_allow_html=True)
-            
-        st.markdown("---")
-        st.markdown("""
-        <div style="display: flex; justify-content: space-between; padding: 0 20px;">
-            <div><span class="form-dot win">W</span> Win</div>
-            <div><span class="form-dot loss">L</span> Loss</div>
-            <div><span class="form-dot draw">D</span> Draw</div>
-        </div>
-        """, unsafe_allow_html=True)
 
     except FileNotFoundError:
         st.error("Standings data will be updated after the first games!")
         st.image("images/coming_soon.jpg", use_container_width=True)
 
-    st.markdown("---")
-    with st.expander("📅 Upcoming Schedule"):
-        st.write("""
-        ### Next Week's Games
-        | Date       | Matchup                  | Venue       |
-        |------------|--------------------------|-------------|
-        | Mon 15 Sep | Security vs Speed        | Main Arena  |
-        | Tue 16 Sep | Substance vs Simplicity  | Court 2     |
-        | Wed 17 Sep | Speed vs Substance       | Main Arena  |
-        | Fri 19 Sep | Championship Semi-Finals | Stadium     |
-        """)
+    # Add comparison chart
+    st.markdown("### 🏅 Placement History")
+    if not standings.empty:
+        fig = go.Figure()
+        for team in standings['TEAM']:
+            team_data = standings[standings['TEAM'] == team]
+            fig.add_trace(go.Bar(
+                x=['1st', '2nd', '3rd', '4th'],
+                y=[team_data['1ST'].values[0], team_data['2ND'].values[0],
+                   team_data['3RD'].values[0], team_data['4TH'].values[0]],
+                name=team,
+                marker_color={
+                    'Team Security': '#0000FF',
+                    'Team Speed': '#FF0000',
+                    'Team Substance': '#FFFFFF',
+                    'Team Simplicity': '#FFFF00'
+                }[team]
+            ))
+        fig.update_layout(barmode='group', hovermode='x unified')
+        st.plotly_chart(fig, use_container_width=True)
 
 def ai_champions_page():
     """Original AI Champions page preserved"""
