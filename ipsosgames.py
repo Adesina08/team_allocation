@@ -638,7 +638,7 @@ def standings_page():
                         """, unsafe_allow_html=True)
 
                 # Cumulative Standings Table
-                st.markdown("### Cumulative Standings After This Week")
+                st.markdown("### Cumulative Standings After Gameweek")
                 historical_standings = calculate_standings(cumulative_data)
                 show_standings_table(historical_standings)
 
