@@ -30,9 +30,9 @@ if "page" not in st.session_state:
 if "team_assignments" not in st.session_state:
     st.session_state.team_assignments = {
         "Team Security": [],
+        "Team Simplicity": [],
         "Team Speed": [],
         "Team Substance": [],
-        "Team Simplicity": [],
     }
 if "available_staff" not in st.session_state:
     excel_file_path = "staffs.xlsx"
@@ -488,29 +488,29 @@ def standings_page():
                     format="🎮 %d"
                 ),
                 "1ST": st.column_config.NumberColumn(
-                    "1st Places",
+                    "🏆 1st",
                     help="Number of 1st place finishes",
-                    format="🏆 %d"
+                    format="%d"
                 ),
                 "2ND": st.column_config.NumberColumn(
-                    "2nd Places",
+                    "🥈 2nd",
                     help="Number of 2nd place finishes",
-                    format="🥈 %d"
+                    format="%d"
                 ),
                 "3RD": st.column_config.NumberColumn(
-                    "3rd Places",
+                    "🥉 3rd",
                     help="Number of 3rd place finishes",
-                    format="🥉 %d"
+                    format="%d"
                 ),
                 "4TH": st.column_config.NumberColumn(
-                    "4th Places",
+                    "🔹 4th",
                     help="Number of 4th place finishes",
-                    format="🔹 %d"
+                    format="%d"
                 ),
                 "TotalPoints": st.column_config.NumberColumn(
-                    "Points",
+                    "⭐ Points",
                     help="Total accumulated points",
-                    format="⭐ %d"
+                    format="%d"
                 )
             },
             use_container_width=True,
