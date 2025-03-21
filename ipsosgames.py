@@ -487,7 +487,7 @@ def standings_page():
         })[['Team', 'GamesPlayed', '1ST', '2ND', '3RD', '4TH', 'TotalPoints']]
 
         # --- Display Current Standings ---
-        st.header("📊 Current Season Standings")
+        st.header("📊 Current Gameweek Standings")
         st.dataframe(
             current_standings.style
                 .format({'TotalPoints': '{:.0f}'})
