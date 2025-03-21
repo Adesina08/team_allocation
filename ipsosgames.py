@@ -458,7 +458,7 @@ def assign_team_member():
     st.rerun()
 
 def standings_page():
-    """Enhanced Standings Page with Combined Views"""
+    """Enhanced Standings Page with Correct Podium Ordering"""
     st.title("🏆 Team Standings & Historical Performance")
     
     try:
@@ -471,49 +471,38 @@ def standings_page():
         
         # Calculate cumulative standings
         current_standings = calculate_standings(gameweeks)
-        
-        # Display current standings table
         show_standings_table(current_standings)
 
-        # --- Current Gameweek Results ---
+        # --- Current Gameweek Podium ---
         st.markdown("---")
-        st.header(f"🎮 Gameweek {latest_gw} Results")
+        st.header(f"🎮 Gameweek {latest_gw} Podium")
         current_gw_data = gameweeks[gameweeks['Gameweek'] == latest_gw]
         
-        # Podium Display
-        st.subheader("Weekly Podium 🏅")
-        cols = st.columns([1, 2, 1, 1])
+        # Proper ordering: 1st, 2nd, 3rd, 4th
+        cols = st.columns(4)
         positions = {
-            1: (cols[1], "🥇"),
-            2: (cols[0], "🥈"),
-            3: (cols[2], "🥉"),
-            4: (cols[3], "🔹")
+            1: (cols[0], "🥇", "#FFD700"),
+            2: (cols[1], "🥈", "#C0C0C0"),
+            3: (cols[2], "🥉", "#CD7F32"),
+            4: (cols[3], "🔹", "#808080")
         }
 
-        for pos in [1, 2, 3, 4]:
+        for pos in sorted(current_gw_data['Position'].unique()):
             team = current_gw_data[current_gw_data['Position'] == pos]['Team'].values[0]
             points = current_gw_data[current_gw_data['Position'] == pos]['PointsEarned'].values[0]
-            col, medal = positions[pos]
+            col, medal, color = positions[pos]
             with col:
-                st.markdown(f"<div style='text-align: center; padding: 15px; border-radius: 10px; background: rgba(255,255,255,0.1);'>"
-                            f"<h3>{medal} {team}</h3>"
-                            f"<p>⭐ {points} Points</p>"
-                            "</div>", unsafe_allow_html=True)
-
-        # Weekly Results Table
-        st.markdown("### Weekly Results Table")
-        current_table = current_gw_data[['Team', 'Position', 'PointsEarned']].sort_values('Position')
-        st.dataframe(
-            current_table.style.applymap(lambda x: 'color: #FFD700' if x == 1 else 
-                                      'color: #C0C0C0' if x == 2 else 
-                                      'color: #CD7F32' if x == 3 else ''),
-            column_config={
-                "Position": st.column_config.NumberColumn("🏅 Position", format="%d"),
-                "PointsEarned": st.column_config.NumberColumn("⭐ Points", format="%d")
-            },
-            use_container_width=True,
-            hide_index=True
-        )
+                st.markdown(f"""
+                    <div style='text-align: center; 
+                                border: 2px solid {color};
+                                padding: 15px; 
+                                border-radius: 10px;
+                                margin: 10px;
+                                background: rgba(255,255,255,0.1);'>
+                        <h3>{medal} {team}</h3>
+                        <p>⭐ {points} Points</p>
+                    </div>
+                """, unsafe_allow_html=True)
 
         # --- Historical Gameweeks Section ---
         st.markdown("---")
@@ -526,36 +515,32 @@ def standings_page():
             gw_date = gw_data['Date'].iloc[0]
             
             with st.expander(f"Gameweek {gw} - {gw_date}", expanded=False):
-                # Weekly Podium
+                # Historical Podium
                 st.subheader(f"Week {gw} Podium 🏅")
-                gw_cols = st.columns([1, 2, 1, 1])
+                gw_cols = st.columns(4)
                 gw_positions = {
-                    1: (gw_cols[1], "🥇"),
-                    2: (gw_cols[0], "🥈"),
-                    3: (gw_cols[2], "🥉"),
-                    4: (gw_cols[3], "🔹")
+                    1: (gw_cols[0], "🥇", "#FFD700"),
+                    2: (gw_cols[1], "🥈", "#C0C0C0"),
+                    3: (gw_cols[2], "🥉", "#CD7F32"),
+                    4: (gw_cols[3], "🔹", "#808080")
                 }
 
-                for pos in [1, 2, 3, 4]:
+                for pos in sorted(gw_data['Position'].unique()):
                     team = gw_data[gw_data['Position'] == pos]['Team'].values[0]
                     points = gw_data[gw_data['Position'] == pos]['PointsEarned'].values[0]
-                    col, medal = gw_positions[pos]
+                    col, medal, color = gw_positions[pos]
                     with col:
-                        st.markdown(f"<div style='text-align: center; padding: 15px; border-radius: 10px; background: rgba(255,255,255,0.1);'>"
-                                    f"<h4>{medal} {team}</h4>"
-                                    f"<p>⭐ {points} Points</p>"
-                                    "</div>", unsafe_allow_html=True)
-
-                # Weekly Results Table
-                st.markdown("### Weekly Results")
-                gw_table = gw_data[['Team', 'Position', 'PointsEarned']].sort_values('Position')
-                st.dataframe(
-                    gw_table.style.applymap(lambda x: 'color: #FFD700' if x == 1 else 
-                                          'color: #C0C0C0' if x == 2 else 
-                                          'color: #CD7F32' if x == 3 else ''),
-                    use_container_width=True,
-                    hide_index=True
-                )
+                        st.markdown(f"""
+                            <div style='text-align: center; 
+                                        border: 2px solid {color};
+                                        padding: 15px; 
+                                        border-radius: 10px;
+                                        margin: 10px;
+                                        background: rgba(255,255,255,0.1);'>
+                                <h4>{medal} {team}</h4>
+                                <p>⭐ {points} Points</p>
+                            </div>
+                        """, unsafe_allow_html=True)
 
                 # Cumulative Standings Table
                 st.markdown("### Cumulative Standings After This Week")
@@ -567,6 +552,8 @@ def standings_page():
         st.image("images/coming_soon.jpg", use_container_width=True)
     except Exception as e:
         st.error(f"Error processing data: {str(e)}")
+
+# Keep calculate_standings() and show_standings_table() functions unchanged from previous version
 
 def calculate_standings(data):
     """Calculate standings from gameweek data"""
