@@ -484,8 +484,8 @@ def standings_page():
                 ),
                 "GamesPlayed": st.column_config.NumberColumn(
                     "Played",
-                    help="Total Games Played",
-                    format="🎮 %d"
+                    help="🎮 Total Games Played",
+                    format="%d"
                 ),
                 "1ST": st.column_config.NumberColumn(
                     "🏆 1st",
