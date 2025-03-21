@@ -1,0 +1,21 @@
+Gameweek,Date,Team,Position,PointsEarned
+1,2024-09-01,Team Security,1,100
+1,2024-09-01,Team Speed,2,80
+1,2024-09-01,Team Substance,3,60
+1,2024-09-01,Team Simplicity,4,40
+2,2024-09-08,Team Security,2,80
+2,2024-09-08,Team Speed,1,100
+2,2024-09-08,Team Substance,3,60
+2,2024-09-08,Team Simplicity,4,40
+3,2024-09-15,Team Security,1,100
+3,2024-09-15,Team Speed,3,60
+3,2024-09-15,Team Substance,2,80
+3,2024-09-15,Team Simplicity,4,40
+4,2024-09-22,Team Security,1,100
+4,2024-09-22,Team Speed,4,40
+4,2024-09-22,Team Substance,2,80
+4,2024-09-22,Team Simplicity,3,60
+5,2024-09-29,Team Security,3,60
+5,2024-09-29,Team Speed,2,80
+5,2024-09-29,Team Substance,1,100
+5,2024-09-29,Team Simplicity,4,40
