@@ -458,17 +458,36 @@ def assign_team_member():
     st.rerun()
 
 def standings_page():
-    """Enhanced Standings Page with Current Stats and Historical Gameweeks"""
+    """Enhanced Standings Page with Dynamic Calculations"""
     st.title("🏆 Team Standings & Historical Performance")
     
-    # --- Current Standings Section ---
-    st.header("📊 Current Season Standings")
-    
     try:
-        # Load current standings data
-        current_standings = pd.read_csv("standings.csv")
+        # Load historical gameweek data
+        gameweeks = pd.read_csv("gameweeks.csv")
         
-        # Create styled dataframe
+        # --- Calculate Current Standings ---
+        # Aggregate basic stats
+        agg_stats = gameweeks.groupby('Team').agg(
+            GamesPlayed=('Gameweek', 'count'),
+            TotalPoints=('PointsEarned', 'sum')
+        ).reset_index()
+
+        # Calculate position counts
+        position_counts = pd.crosstab(
+            index=gameweeks['Team'], 
+            columns=gameweeks['Position'], 
+            colnames=[None]
+        ).reset_index()
+        position_counts.columns = ['Team', '1ST', '2ND', '3RD', '4TH']
+
+        # Merge and clean data
+        current_standings = pd.merge(agg_stats, position_counts, on='Team', how='outer')
+        current_standings = current_standings.fillna(0).astype({
+            '1ST': int, '2ND': int, '3RD': int, '4TH': int
+        })[['Team', 'GamesPlayed', '1ST', '2ND', '3RD', '4TH', 'TotalPoints']]
+
+        # --- Display Current Standings ---
+        st.header("📊 Current Season Standings")
         st.dataframe(
             current_standings.style
                 .format({'TotalPoints': '{:.0f}'})
@@ -477,99 +496,58 @@ def standings_page():
                                 'background: #FFFFFF20' if x.Team == 'Team Substance' else
                                 'background: #FFFF0020' for i in x], axis=1),
             column_config={
-                "Team": st.column_config.TextColumn(
-                    "Team",
-                    help="Team Names",
-                    width="medium"
-                ),
-                "GamesPlayed": st.column_config.NumberColumn(
-                    "Played",
-                    help="🎮 Total Games Played",
-                    format="%d"
-                ),
-                "1ST": st.column_config.NumberColumn(
-                    "🏆 1st",
-                    help="Number of 1st place finishes",
-                    format="%d"
-                ),
-                "2ND": st.column_config.NumberColumn(
-                    "🥈 2nd",
-                    help="Number of 2nd place finishes",
-                    format="%d"
-                ),
-                "3RD": st.column_config.NumberColumn(
-                    "🥉 3rd",
-                    help="Number of 3rd place finishes",
-                    format="%d"
-                ),
-                "4TH": st.column_config.NumberColumn(
-                    "🔹 4th",
-                    help="Number of 4th place finishes",
-                    format="%d"
-                ),
-                "TotalPoints": st.column_config.NumberColumn(
-                    "⭐ Points",
-                    help="Total accumulated points",
-                    format="%d"
-                )
+                "Team": st.column_config.TextColumn("Team", width="medium"),
+                "GamesPlayed": st.column_config.NumberColumn("🎮 Played", format="%d"),
+                "1ST": st.column_config.NumberColumn("🏆 1st", format="%d"),
+                "2ND": st.column_config.NumberColumn("🥈 2nd", format="%d"),
+                "3RD": st.column_config.NumberColumn("🥉 3rd", format="%d"),
+                "4TH": st.column_config.NumberColumn("🔹 4th", format="%d"),
+                "TotalPoints": st.column_config.NumberColumn("⭐ Points", format="%d")
             },
             use_container_width=True,
             hide_index=True
         )
-        
-    except FileNotFoundError:
-        st.error("Current standings data not available yet!")
-        st.image("images/coming_soon.jpg", use_container_width=True)
 
-    # --- Historical Gameweeks Section ---
-    st.markdown("---")
-    st.header("📅 Previous Gameweeks")
-    
-    try:
-        # Load historical gameweek data
-        gameweeks = pd.read_csv("gameweeks.csv")
-        
-        # Get unique gameweeks in reverse order
+        # --- Historical Gameweeks Section ---
+        st.markdown("---")
+        st.header("📅 Previous Gameweeks")
         unique_gws = sorted(gameweeks['Gameweek'].unique(), reverse=True)
         
-        # Create expandable sections for each gameweek
         for gw in unique_gws:
             gw_data = gameweeks[gameweeks['Gameweek'] == gw]
             gw_date = gw_data['Date'].iloc[0]
             
             with st.expander(f"Gameweek {gw} - {gw_date}", expanded=False):
-                # Create podium display
-                col1, col2, col3 = st.columns([1,2,1])
-                with col2:
-                    st.subheader(f"🥇 {gw_data[gw_data['Position'] == 1]['Team'].values[0]}")
-                with col1:
-                    st.subheader(f"🥈 {gw_data[gw_data['Position'] == 2]['Team'].values[0]}")
-                with col3:
-                    st.subheader(f"🥉 {gw_data[gw_data['Position'] == 3]['Team'].values[0]}")
+                # Podium Display
+                cols = st.columns([1, 2, 1])
+                podium_positions = {1: cols[1], 2: cols[0], 3: cols[2]}
                 
-                # Create detailed results table
+                for pos in [1, 2, 3]:
+                    team = gw_data[gw_data['Position'] == pos]['Team'].values[0]
+                    points = gw_data[gw_data['Position'] == pos]['PointsEarned'].values[0]
+                    with podium_positions[pos]:
+                        st.subheader(f"{['🥈', '🥇', '🥉'][pos-1]} {team}")
+                        st.caption(f"{points} points")
+
+                # Detailed Table
                 gw_table = gw_data[['Team', 'Position', 'PointsEarned']].sort_values('Position')
                 st.dataframe(
-                    gw_table.style
-                        .applymap(lambda x: 'color: #FFD700' if x == 1 else 
-                                 'color: #C0C0C0' if x == 2 else 
-                                 'color: #CD7F32' if x == 3 else ''),
+                    gw_table.style.applymap(lambda x: 'color: #FFD700' if x == 1 else 
+                                          'color: #C0C0C0' if x == 2 else 
+                                          'color: #CD7F32' if x == 3 else ''),
                     column_config={
-                        "Position": st.column_config.NumberColumn(
-                            "Position",
-                            format="🏅 %d"
-                        ),
-                        "PointsEarned": st.column_config.NumberColumn(
-                            "Points Earned",
-                            format="⭐ %d"
-                        )
+                        "Position": st.column_config.NumberColumn("🏅 Position", format="%d"),
+                        "PointsEarned": st.column_config.NumberColumn("⭐ Points", format="%d")
                     },
                     use_container_width=True,
                     hide_index=True
                 )
-                
+
     except FileNotFoundError:
-        st.error("Historical gameweek data will be available after first matches!")
+        st.error("No gameweek data available yet! Check back after the first matches.")
+        st.image("images/coming_soon.jpg", use_container_width=True)
+    except Exception as e:
+        st.error(f"Error processing data: {str(e)}")
 
 def ai_champions_page():
     """Original AI Champions page preserved"""
