@@ -580,6 +580,7 @@ def show_standings_table(standings):
         standings.sort_values('TotalPoints', ascending=False)
         .style
         .format({'TotalPoints': '{:.0f}'})
+        .set_properties(**{'text-align': 'center'})  # Center alignment added here
         .apply(lambda x: ['background: #0000FF20' if x.Team == 'Team Security' else 
                         'background: #FF000020' if x.Team == 'Team Speed' else
                         'background: #FFFFFF20' if x.Team == 'Team Substance' else
