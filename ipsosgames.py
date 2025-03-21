@@ -21,7 +21,7 @@ st.set_page_config(
     page_title="2025 Ipsos Games",
     page_icon="🎮",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 # Initialize session state with minimum team size
@@ -29,9 +29,9 @@ if "page" not in st.session_state:
     st.session_state.page = "home"
 if "team_assignments" not in st.session_state:
     st.session_state.team_assignments = {
-        "Security": [],
-        "Seamless": [],
-        "Social": [],
+        "Team Security": [],
+        "Team Speed": [],
+        "Team Substance": [],
         "Sassy": [],
     }
 if "available_staff" not in st.session_state:
@@ -56,20 +56,20 @@ st.markdown(
 <style>
     /* Updated Team Colors */
     .team-security {
-        background: linear-gradient(135deg, #4CA1AF 0%, #2C3E50 100%);
+        background: linear-gradient(135deg, #0000FF 0%, #00008B 100%); /* Blue */
         color: white;
     }
-    .team-seamless {
-        background: linear-gradient(135deg, #FF4B2B 0%, #FF416C 100%);
+    .team-speed {
+        background: linear-gradient(135deg, #FF0000 0%, #8B0000 100%); /* Red */
         color: white;
     }
-    .team-social {
-        background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-        color: white;
+    .team-substance {
+        background: linear-gradient(135deg, #FFFFFF 0%, #D3D3D3 100%); /* White */
+        color: black;
     }
-    .team-sassy {
-        background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
-        color: white;
+    .team-simplicity {
+        background: linear-gradient(135deg, #FFFF00 0%, #FFD700 100%); /* Yellow */
+        color: black;
     }
     
     .scroll-target {
@@ -357,10 +357,10 @@ def team_assignment_page():
     # Display teams
     cols = st.columns(4)
     team_colors = {
-        "Security": "team-security",
-        "Seamless": "team-seamless",
-        "Social": "team-social",
-        "Sassy": "team-sassy",
+        "Team Security": "team-security",
+        "Team Speed": "team-speed",
+        "Team Substance": "team-substance",
+        "Team Simplicity": "team-simplicity",
     }
 
     for idx, (team, members) in enumerate(st.session_state.team_assignments.items()):
