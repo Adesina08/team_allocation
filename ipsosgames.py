@@ -403,6 +403,7 @@ def home_page():
     #     </div>
     # </div>
     # """, unsafe_allow_html=True)
+    st.markdown("---")
 
 def check_constraints(staff_member, team):
     """Check only incompatible pairs and team balance"""
