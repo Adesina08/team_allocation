@@ -466,14 +466,7 @@ def standings_page():
         gameweeks = pd.read_csv("gameweeks.csv")
         latest_gw = gameweeks['Gameweek'].max()
 
-        # --- Current Standings Section ---
-        st.header(f"📊 Current Overall Standings (After {latest_gw} Gameweeks)")
-        
-        # Calculate cumulative standings
-        current_standings = calculate_standings(gameweeks)
-        show_standings_table(current_standings)
-
-        # --- Current Gameweek Podium ---
+                # --- Current Gameweek Podium ---
         st.markdown("---")
         st.header(f"🎮 Gameweek {latest_gw} Podium")
         current_gw_data = gameweeks[gameweeks['Gameweek'] == latest_gw]
@@ -503,6 +496,13 @@ def standings_page():
                         <p>⭐ {points} Points</p>
                     </div>
                 """, unsafe_allow_html=True)
+
+        # --- Current Standings Section ---
+        st.header(f"📊 Current Overall Standings (After {latest_gw} Gameweeks)")
+        
+        # Calculate cumulative standings
+        current_standings = calculate_standings(gameweeks)
+        show_standings_table(current_standings)
 
         # --- Historical Gameweeks Section ---
         st.markdown("---")
