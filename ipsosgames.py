@@ -404,6 +404,8 @@ def home_page():
     # </div>
     # """, unsafe_allow_html=True)
     st.markdown("---")
+    st.title("Ipsos Games 2025")
+    
 
 def check_constraints(staff_member, team):
     """Check only incompatible pairs and team balance"""
