@@ -550,7 +550,7 @@ def assign_team_member():
         </div>""", 
         unsafe_allow_html=True
     )
-    time.sleep(1.5)
+    time.sleep(3.5)
     success.empty()
     
     # Force UI update
