@@ -458,94 +458,118 @@ def assign_team_member():
     st.rerun()
 
 def standings_page():
-    """Enhanced Standings Page with Placement Tracking"""
-    st.title("🏆 Team Standings")
+    """Enhanced Standings Page with Current Stats and Historical Gameweeks"""
+    st.title("🏆 Team Standings & Historical Performance")
+    
+    # --- Current Standings Section ---
+    st.header("📊 Current Season Standings")
     
     try:
-        standings = pd.read_csv("standings.csv").sort_values(by='POINTS', ascending=False)
-        standings['PROGRESS'] = standings['POINTS'] / standings['POINTS'].max() * 100
-
-        container = st.container()
-        with container:
-            st.markdown("<div class='standings-container'>", unsafe_allow_html=True)
-            
-            for idx, (_, row) in enumerate(standings.iterrows(), 1):
-                team_class = {
-                    'Team Security': 'team-security',
-                    'Team Speed': 'team-speed',
-                    'Team Substance': 'team-substance',
-                    'Team Simplicity': 'team-simplicity'
-                }.get(row['TEAM'], '')
-                
-                st.markdown(f"""
-                <div class="team-card {team_class}">
-                    <div class="rank-badge">
-                        #{idx}
-                        {"🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else ""}
-                    </div>
-                    <div class="team-info">
-                        <h3 style="margin:0 0 5px 0; color: {'white' if idx <=3 else 'inherit'}">{row['TEAM']}</h3>
-                        <div class="team-stats">
-                            <div class="stat-item">
-                                <div class="stat-value">{row['POINTS']}</div>
-                                <div class="stat-label">POINTS</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">{row['WINS']}-{row['LOSSES']}</div>
-                                <div class="stat-label">RECORD</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">{row['1ST']}</div>
-                                <div class="stat-label">1ST PLACES</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">{row['2ND']}</div>
-                                <div class="stat-label">2ND PLACES</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">{row['3RD']}</div>
-                                <div class="stat-label">3RD PLACES</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">{row['4TH']}</div>
-                                <div class="stat-label">4TH PLACES</div>
-                            </div>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: {row['PROGRESS']}%; 
-                                background: {'white' if idx <=3 else 'var(--progress-color)'}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            st.markdown("</div>", unsafe_allow_html=True)
-
+        # Load current standings data
+        current_standings = pd.read_csv("standings.csv")
+        
+        # Create styled dataframe
+        st.dataframe(
+            current_standings.style
+                .format({'TotalPoints': '{:.0f}'})
+                .apply(lambda x: ['background: #0000FF20' if x.Team == 'Team Security' else 
+                                'background: #FF000020' if x.Team == 'Team Speed' else
+                                'background: #FFFFFF20' if x.Team == 'Team Substance' else
+                                'background: #FFFF0020' for i in x], axis=1),
+            column_config={
+                "Team": st.column_config.TextColumn(
+                    "Team",
+                    help="Team Names",
+                    width="medium"
+                ),
+                "GamesPlayed": st.column_config.NumberColumn(
+                    "Played",
+                    help="Total Games Played",
+                    format="🎮 %d"
+                ),
+                "1ST": st.column_config.NumberColumn(
+                    "1st Places",
+                    help="Number of 1st place finishes",
+                    format="🏆 %d"
+                ),
+                "2ND": st.column_config.NumberColumn(
+                    "2nd Places",
+                    help="Number of 2nd place finishes",
+                    format="🥈 %d"
+                ),
+                "3RD": st.column_config.NumberColumn(
+                    "3rd Places",
+                    help="Number of 3rd place finishes",
+                    format="🥉 %d"
+                ),
+                "4TH": st.column_config.NumberColumn(
+                    "4th Places",
+                    help="Number of 4th place finishes",
+                    format="🔹 %d"
+                ),
+                "TotalPoints": st.column_config.NumberColumn(
+                    "Points",
+                    help="Total accumulated points",
+                    format="⭐ %d"
+                )
+            },
+            use_container_width=True,
+            hide_index=True
+        )
+        
     except FileNotFoundError:
-        st.error("Standings data will be updated after the first games!")
+        st.error("Current standings data not available yet!")
         st.image("images/coming_soon.jpg", use_container_width=True)
 
-    # Add comparison chart
-    st.markdown("### 🏅 Placement History")
-    if not standings.empty:
-        fig = go.Figure()
-        for team in standings['TEAM']:
-            team_data = standings[standings['TEAM'] == team]
-            fig.add_trace(go.Bar(
-                x=['1st', '2nd', '3rd', '4th'],
-                y=[team_data['1ST'].values[0], team_data['2ND'].values[0],
-                   team_data['3RD'].values[0], team_data['4TH'].values[0]],
-                name=team,
-                marker_color={
-                    'Team Security': '#0000FF',
-                    'Team Speed': '#FF0000',
-                    'Team Substance': '#FFFFFF',
-                    'Team Simplicity': '#FFFF00'
-                }[team]
-            ))
-        fig.update_layout(barmode='group', hovermode='x unified')
-        st.plotly_chart(fig, use_container_width=True)
+    # --- Historical Gameweeks Section ---
+    st.markdown("---")
+    st.header("📅 Previous Gameweeks")
+    
+    try:
+        # Load historical gameweek data
+        gameweeks = pd.read_csv("gameweeks.csv")
+        
+        # Get unique gameweeks in reverse order
+        unique_gws = sorted(gameweeks['Gameweek'].unique(), reverse=True)
+        
+        # Create expandable sections for each gameweek
+        for gw in unique_gws:
+            gw_data = gameweeks[gameweeks['Gameweek'] == gw]
+            gw_date = gw_data['Date'].iloc[0]
+            
+            with st.expander(f"Gameweek {gw} - {gw_date}", expanded=False):
+                # Create podium display
+                col1, col2, col3 = st.columns([1,2,1])
+                with col2:
+                    st.subheader(f"🥇 {gw_data[gw_data['Position'] == 1]['Team'].values[0]}")
+                with col1:
+                    st.subheader(f"🥈 {gw_data[gw_data['Position'] == 2]['Team'].values[0]}")
+                with col3:
+                    st.subheader(f"🥉 {gw_data[gw_data['Position'] == 3]['Team'].values[0]}")
+                
+                # Create detailed results table
+                gw_table = gw_data[['Team', 'Position', 'PointsEarned']].sort_values('Position')
+                st.dataframe(
+                    gw_table.style
+                        .applymap(lambda x: 'color: #FFD700' if x == 1 else 
+                                 'color: #C0C0C0' if x == 2 else 
+                                 'color: #CD7F32' if x == 3 else ''),
+                    column_config={
+                        "Position": st.column_config.NumberColumn(
+                            "Position",
+                            format="🏅 %d"
+                        ),
+                        "PointsEarned": st.column_config.NumberColumn(
+                            "Points Earned",
+                            format="⭐ %d"
+                        )
+                    },
+                    use_container_width=True,
+                    hide_index=True
+                )
+                
+    except FileNotFoundError:
+        st.error("Historical gameweek data will be available after first matches!")
 
 def ai_champions_page():
     """Original AI Champions page preserved"""
