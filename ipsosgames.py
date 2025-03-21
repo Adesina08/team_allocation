@@ -458,7 +458,7 @@ def assign_team_member():
     st.rerun()
 
 def standings_page():
-    """Enhanced Standings Page with Separate Current/Historical Views"""
+    """Enhanced Standings Page with Combined Views"""
     st.title("🏆 Team Standings & Historical Performance")
     
     try:
@@ -466,15 +466,23 @@ def standings_page():
         gameweeks = pd.read_csv("gameweeks.csv")
         latest_gw = gameweeks['Gameweek'].max()
 
-        # --- Current Gameweek Section ---
-        st.header(f"📊 Current Gameweek {latest_gw} Standings")
+        # --- Current Standings Section ---
+        st.header(f"📊 Current Overall Standings (After {latest_gw} Gameweeks)")
         
-        # Get current gameweek data
+        # Calculate cumulative standings
+        current_standings = calculate_standings(gameweeks)
+        
+        # Display current standings table
+        show_standings_table(current_standings)
+
+        # --- Current Gameweek Results ---
+        st.markdown("---")
+        st.header(f"🎮 Gameweek {latest_gw} Results")
         current_gw_data = gameweeks[gameweeks['Gameweek'] == latest_gw]
         
         # Podium Display
-        st.subheader("Podium Positions 🏅")
-        cols = st.columns([1, 1, 1, 1])
+        st.subheader("Weekly Podium 🏅")
+        cols = st.columns([1, 2, 1, 1])
         positions = {
             1: (cols[1], "🥇"),
             2: (cols[0], "🥈"),
@@ -492,8 +500,8 @@ def standings_page():
                             f"<p>⭐ {points} Points</p>"
                             "</div>", unsafe_allow_html=True)
 
-        # Current Standings Table
-        st.markdown("### Gameweek Results")
+        # Weekly Results Table
+        st.markdown("### Weekly Results Table")
         current_table = current_gw_data[['Team', 'Position', 'PointsEarned']].sort_values('Position')
         st.dataframe(
             current_table.style.applymap(lambda x: 'color: #FFD700' if x == 1 else 
@@ -514,11 +522,13 @@ def standings_page():
         
         for gw in historical_gws:
             gw_data = gameweeks[gameweeks['Gameweek'] == gw]
+            cumulative_data = gameweeks[gameweeks['Gameweek'] <= gw]
             gw_date = gw_data['Date'].iloc[0]
             
             with st.expander(f"Gameweek {gw} - {gw_date}", expanded=False):
-                # Podium Display
-                gw_cols = st.columns([1, 1, 1, 1])
+                # Weekly Podium
+                st.subheader(f"Week {gw} Podium 🏅")
+                gw_cols = st.columns([1, 2, 1, 1])
                 gw_positions = {
                     1: (gw_cols[1], "🥇"),
                     2: (gw_cols[0], "🥈"),
@@ -536,25 +546,28 @@ def standings_page():
                                     f"<p>⭐ {points} Points</p>"
                                     "</div>", unsafe_allow_html=True)
 
-                # Historical Table
+                # Weekly Results Table
+                st.markdown("### Weekly Results")
                 gw_table = gw_data[['Team', 'Position', 'PointsEarned']].sort_values('Position')
                 st.dataframe(
                     gw_table.style.applymap(lambda x: 'color: #FFD700' if x == 1 else 
                                           'color: #C0C0C0' if x == 2 else 
                                           'color: #CD7F32' if x == 3 else ''),
-                    column_config={
-                        "Position": st.column_config.NumberColumn("🏅 Position", format="%d"),
-                        "PointsEarned": st.column_config.NumberColumn("⭐ Points", format="%d")
-                    },
                     use_container_width=True,
                     hide_index=True
                 )
+
+                # Cumulative Standings Table
+                st.markdown("### Cumulative Standings After This Week")
+                historical_standings = calculate_standings(cumulative_data)
+                show_standings_table(historical_standings)
 
     except FileNotFoundError:
         st.error("No gameweek data available yet! Check back after the first matches.")
         st.image("images/coming_soon.jpg", use_container_width=True)
     except Exception as e:
         st.error(f"Error processing data: {str(e)}")
+
 def calculate_standings(data):
     """Calculate standings from gameweek data"""
     agg_stats = data.groupby('Team').agg(
@@ -575,14 +588,15 @@ def calculate_standings(data):
     })[['Team', 'GamesPlayed', '1ST', '2ND', '3RD', '4TH', 'TotalPoints']]
 
 def show_standings_table(standings):
-    """Display styled standings table"""
+    """Display styled standings table with all columns"""
     st.dataframe(
-        standings.style
-            .format({'TotalPoints': '{:.0f}'})
-            .apply(lambda x: ['background: #0000FF20' if x.Team == 'Team Security' else 
-                            'background: #FF000020' if x.Team == 'Team Speed' else
-                            'background: #FFFFFF20' if x.Team == 'Team Substance' else
-                            'background: #FFFF0020' for i in x], axis=1),
+        standings.sort_values('TotalPoints', ascending=False)
+        .style
+        .format({'TotalPoints': '{:.0f}'})
+        .apply(lambda x: ['background: #0000FF20' if x.Team == 'Team Security' else 
+                        'background: #FF000020' if x.Team == 'Team Speed' else
+                        'background: #FFFFFF20' if x.Team == 'Team Substance' else
+                        'background: #FFFF0020' for i in x], axis=1),
         column_config={
             "Team": st.column_config.TextColumn("Team", width="medium"),
             "GamesPlayed": st.column_config.NumberColumn("🎮 Played", format="%d"),
