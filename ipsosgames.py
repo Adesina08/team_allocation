@@ -405,7 +405,7 @@ def home_page():
     # """, unsafe_allow_html=True)
     st.markdown("---")
     st.title("Ipsos Games 2025")
-    st.image("images/ipsosgames2025pic.jpg", use_container_width=True)
+    st.image("images/ipsosgames2025pic.jpg")
     
 
 def check_constraints(staff_member, team):
