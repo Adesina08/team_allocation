@@ -1,68 +1,125 @@
+# admin_uploader.py
 import streamlit as st
 import requests
 import base64
+import pandas as pd
+from io import StringIO
 
-# Configuration: Replace these with your actual repository details
-REPO_OWNER = "your_username"    # GitHub username or organization owning the repository
-REPO_NAME = "your_repo_name"    # Name of the repository with project files
-FILE_PATH = "gameweek.csv"      # File path in the repository to update
+# Configuration - Update these with your actual details
+REPO_OWNER = "your-github-username"  # Replace with your GitHub username
+REPO_NAME = "your-repo-name"         # Replace with your repository name
+FILE_PATH = "gameweeks.csv"          # Path to your CSV file in the repo
 
-# Password protection for the admin
-password = st.text_input("Enter Password", type="password")
-if password != st.secrets["ADMIN_PASSWORD"]:
-    st.error("Incorrect password. Please try again.")
+# Authentication
+def check_password():
+    if 'authenticated' not in st.session_state:
+        password = st.text_input("Admin Password", type="password")
+        if password:
+            if password == st.secrets["ADMIN_PASSWORD"]:
+                st.session_state.authenticated = True
+                st.rerun()
+            else:
+                st.error("Incorrect password")
+                st.stop()
+        else:
+            st.stop()
+    return True
+
+if not check_password():
     st.stop()
 
-# Retrieve the GitHub token from Streamlit secrets
-GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
+# Retrieve GitHub token from secrets
+try:
+    GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
+except KeyError:
+    st.error("Missing GitHub token in secrets")
+    st.stop()
 
-# Function to upload or update the file in the GitHub repository
-def update_file_on_github(content):
+def validate_csv(content):
+    """Validate CSV structure"""
+    try:
+        df = pd.read_csv(StringIO(content))
+        required_columns = ['Gameweek', 'Date', 'Team', 'Position', 'PointsEarned']
+        if not all(col in df.columns for col in required_columns):
+            st.error(f"Missing required columns: {', '.join(required_columns)}")
+            return False
+        return True
+    except Exception as e:
+        st.error(f"Invalid CSV format: {str(e)}")
+        return False
+
+def update_github_file(content):
+    """Update file on GitHub with proper error handling"""
     url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/{FILE_PATH}"
     headers = {
         "Authorization": f"token {GITHUB_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
     }
-    
-    # Check if the file already exists to get its SHA (for updating)
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        sha = response.json()["sha"]  # File exists, get its SHA
-    elif response.status_code == 404:
-        sha = None  # File doesn't exist, will create it
-    else:
-        st.error(f"Error checking file: {response.status_code}")
-        return
-    
-    # Encode the file content to base64 as required by GitHub API
-    content_encoded = base64.b64encode(content.encode()).decode()
-    
-    # Prepare the API payload
-    payload = {
-        "message": "Updated gameweek.csv via Streamlit app",
-        "content": content_encoded,
-    }
-    if sha:
-        payload["sha"] = sha  # Include SHA for updating existing file
-    
-    # Send the request to update or create the file
-    response = requests.put(url, headers=headers, json=payload)
-    if response.status_code in (200, 201):
-        st.success("Gameweek.csv has been successfully updated in the repository!")
-    else:
-        st.error(f"Failed to update file: {response.json().get('message', 'Unknown error')}")
 
-# Streamlit app interface
-st.title("Gameweek CSV Uploader")
-st.write("Upload your gameweeks CSV file to update it in the GitHub repository.")
+    try:
+        # Get existing file SHA
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        sha = response.json().get("sha")
+        
+        # Prepare update
+        encoded_content = base64.b64encode(content.encode()).decode()
+        payload = {
+            "message": "Update gameweek data via Admin Portal",
+            "content": encoded_content,
+            "sha": sha
+        }
 
-# File uploader for the CSV file
-uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+        # Push changes
+        response = requests.put(url, headers=headers, json=payload)
+        response.raise_for_status()
+        return True
+    except requests.exceptions.HTTPError as e:
+        st.error(f"GitHub API Error: {e.response.json().get('message', 'Unknown error')}")
+    except Exception as e:
+        st.error(f"Error updating file: {str(e)}")
+    return False
 
-if uploaded_file is not None:
-    # Read the uploaded file content
-    content = uploaded_file.read().decode("utf-8")
+# Main app interface
+st.title("Gameweek Data Admin Portal")
+st.write("### Secure CSV Upload to GitHub Repository")
+
+uploaded_file = st.file_uploader("Upload new gameweek data (CSV)", type="csv")
+
+if uploaded_file:
+    content = uploaded_file.getvalue().decode()
     
-    # Button to trigger the upload
-    if st.button("Upload to GitHub"):
-        update_file_on_github(content)
+    if validate_csv(content):
+        st.success("CSV validation passed!")
+        st.write("Preview of new data:")
+        st.dataframe(pd.read_csv(StringIO(content)))
+        
+        if st.button("🚀 Publish to GitHub"):
+            with st.spinner("Updating repository..."):
+                if update_github_file(content):
+                    st.balloons()
+                    st.success("Successfully updated gameweek data!")
+                    st.markdown(f"""
+                        **Next Steps:**
+                        1. Changes will be visible in the main app shortly
+                        2. [View on GitHub](https://github.com/{REPO_OWNER}/{REPO_NAME}/blob/main/{FILE_PATH})
+                    """)
+
+# Add setup instructions
+with st.expander("ℹ️ Configuration Guide"):
+    st.markdown("""
+    **1. Repository Setup:**
+    - Ensure your repository contains the `gameweeks.csv` file
+    - File format must include these columns:
+        - Gameweek (integer)
+        - Date (YYYY-MM-DD)
+        - Team (exact team names)
+        - Position (1-4)
+        - PointsEarned (integer)
+
+    **2. Required Permissions:**
+    - GitHub token must have `repo` scope
+    - [Create token](https://github.com/settings/tokens/new?scopes=repo)
+    """)
+
+st.caption("Note: All changes are audited and permanent. Double-check before publishing.")
