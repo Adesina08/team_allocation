@@ -597,7 +597,7 @@ def standings_page():
                 """, unsafe_allow_html=True)
 
         # --- Current Standings Section ---
-        st.header(f"📊 Current Overall Standings (After {latest_gw} Gameweeks)", use_container_width=True)
+        st.header(f"📊 Current Overall Standings (After {latest_gw} Gameweeks)")
         
         # Calculate cumulative standings
         current_standings = calculate_standings(gameweeks)
