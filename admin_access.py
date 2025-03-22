@@ -6,8 +6,8 @@ import pandas as pd
 from io import StringIO
 
 # Configuration - Update these with your actual details
-REPO_OWNER = "your-github-username"  # Replace with your GitHub username
-REPO_NAME = "your-repo-name"         # Replace with your repository name
+REPO_OWNER = "Adesina08"  # Replace with your GitHub username
+REPO_NAME = "team_allocation"         # Replace with your repository name
 FILE_PATH = "gameweeks.csv"          # Path to your CSV file in the repo
 
 # Authentication
