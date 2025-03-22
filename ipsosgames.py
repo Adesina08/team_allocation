@@ -645,11 +645,11 @@ def show_standings_table(standings):
                 historical_standings = calculate_standings(cumulative_data)
                 show_standings_table(historical_standings)
 
-        except FileNotFoundError:
-            st.error("No gameweek data available yet! Check back after the first matches.")
-            st.image("images/coming_soon.jpg", use_container_width=True)
-        except Exception as e:
-            st.error(f"Error processing data: {str(e)}")
+except FileNotFoundError:
+    st.error("No gameweek data available yet! Check back after the first matches.")
+    st.image("images/coming_soon.jpg", use_container_width=True)
+except Exception as e:
+    st.error(f"Error processing data: {str(e)}")
 
 # Keep calculate_standings() and show_standings_table() functions unchanged from previous version
 
