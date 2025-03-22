@@ -558,7 +558,7 @@ def assign_team_member():
 
 def standings_page():
     """Enhanced Standings Page with Correct Podium Ordering"""
-    st.title("🏆 Team Standings & Historical Performance")
+    st.title("🏆 Team Standings & Performance")
     
     try:
         # Load historical gameweek data
@@ -661,7 +661,7 @@ def show_standings_table(standings):
         .set_properties(**{
             'text-align': 'center',
             'font-weight': 'bold',
-            'font-size': '14px',
+            'font-size': '16px',
             'color': '#333333'
         })
         .set_table_styles([{
@@ -679,8 +679,8 @@ def show_standings_table(standings):
             'background: #FFFF0020;' for i in x
         ], axis=1),
         column_config={
-            "Team": st.column_config.TextColumn("Team", width="medium"),
-            "GamesPlayed": st.column_config.NumberColumn("🎮 Played", format="%d"),
+            "Team": st.column_config.TextColumn("Teams", width="medium"),
+            "GamesPlayed": st.column_config.NumberColumn("🎮 Games Played", format="%d"),
             "1ST": st.column_config.NumberColumn("🏆 1st", format="%d"),
             "2ND": st.column_config.NumberColumn("🥈 2nd", format="%d"),
             "3RD": st.column_config.NumberColumn("🥉 3rd", format="%d"),
@@ -724,8 +724,8 @@ def show_standings_table(standings):
                         'background: #FFFFFF20' if x.Team == 'Team Substance' else
                         'background: #FFFF0020' for i in x], axis=1),
         column_config={
-            "Team": st.column_config.TextColumn("Team", width="medium"),
-            "GamesPlayed": st.column_config.NumberColumn("🎮 Played", format="%d"),
+            "Team": st.column_config.TextColumn("Teams", width="medium"),
+            "GamesPlayed": st.column_config.NumberColumn("🎮 Games Played", format="%d"),
             "1ST": st.column_config.NumberColumn("🏆 1st", format="%d"),
             "2ND": st.column_config.NumberColumn("🥈 2nd", format="%d"),
             "3RD": st.column_config.NumberColumn("🥉 3rd", format="%d"),
