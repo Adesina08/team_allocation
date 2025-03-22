@@ -648,7 +648,7 @@ def standings_page():
 
     except FileNotFoundError:
         st.error("No gameweek data available yet! Check back after the first game (4th April 2025).")
-        st.image("images/coming_soon.jpg", width=800)
+        st.image("images/coming_soon.jpg", width=760)
     except Exception as e:
         st.error(f"Error processing data: {str(e)}")
 
