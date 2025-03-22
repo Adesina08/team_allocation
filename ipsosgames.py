@@ -599,8 +599,8 @@ def show_standings_table(standings):
     st.header(f"📊 Current Overall Standings (After {latest_gw} Gameweeks)")
         
         # Calculate cumulative standings
-        current_standings = calculate_standings(gameweeks)
-        show_standings_table(current_standings)
+    current_standings = calculate_standings(gameweeks)
+    show_standings_table(current_standings)
 
         # --- Historical Gameweeks Section ---
         st.markdown("---")
