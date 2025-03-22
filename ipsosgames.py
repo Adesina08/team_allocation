@@ -557,50 +557,50 @@ def assign_team_member():
     st.rerun()
 
 def show_standings_table(standings):
-    """Display styled standings table with all columns"""
-    st.dataframe(
-        standings.sort_values('TotalPoints', ascending=False)
-        .style
-        .format({'TotalPoints': '{:.0f}'})
-        .set_properties(**{
-            'text-align': 'center',
-            'font-weight': 'bold',
-            'font-size': '14px',
-            'color': '#333333'
-        })
-        .set_table_styles([{
-            'selector': 'th',
-            'props': [
-                ('font-size', '16px'),
-                ('font-weight', 'bold'),
-                ('background', 'rgba(0,0,0,0.05)')
-            ]
-        }])
-        .apply(lambda x: [
-            'background: #0000FF20;' if x.Team == 'Team Security' else 
-            'background: #FF000020;' if x.Team == 'Team Speed' else
-            'background: #FFFFFF40;' if x.Team == 'Team Substance' else
-            'background: #FFFF0020;' for i in x
-        ], axis=1),
-        column_config={
-            "Team": st.column_config.TextColumn("Team", width="medium"),
-            "GamesPlayed": st.column_config.NumberColumn("🎮 Played", format="%d"),
-            "1ST": st.column_config.NumberColumn("🏆 1st", format="%d"),
-            "2ND": st.column_config.NumberColumn("🥈 2nd", format="%d"),
-            "3RD": st.column_config.NumberColumn("🥉 3rd", format="%d"),
-            "4TH": st.column_config.NumberColumn("🔹 4th", format="%d"),
-            "TotalPoints": st.column_config.NumberColumn("⭐ Points", format="%d")
-        },
-        use_container_width=True,
-        hide_index=True
-    )
+        """Display styled standings table with all columns"""
+        st.dataframe(
+            standings.sort_values('TotalPoints', ascending=False)
+            .style
+            .format({'TotalPoints': '{:.0f}'})
+            .set_properties(**{
+                'text-align': 'center',
+                'font-weight': 'bold',
+                'font-size': '14px',
+                'color': '#333333'
+            })
+            .set_table_styles([{
+                'selector': 'th',
+                'props': [
+                    ('font-size', '16px'),
+                    ('font-weight', 'bold'),
+                    ('background', 'rgba(0,0,0,0.05)')
+                ]
+            }])
+            .apply(lambda x: [
+                'background: #0000FF20;' if x.Team == 'Team Security' else 
+                'background: #FF000020;' if x.Team == 'Team Speed' else
+                'background: #FFFFFF40;' if x.Team == 'Team Substance' else
+                'background: #FFFF0020;' for i in x
+            ], axis=1),
+            column_config={
+                "Team": st.column_config.TextColumn("Team", width="medium"),
+                "GamesPlayed": st.column_config.NumberColumn("🎮 Played", format="%d"),
+                "1ST": st.column_config.NumberColumn("🏆 1st", format="%d"),
+                "2ND": st.column_config.NumberColumn("🥈 2nd", format="%d"),
+                "3RD": st.column_config.NumberColumn("🥉 3rd", format="%d"),
+                "4TH": st.column_config.NumberColumn("🔹 4th", format="%d"),
+                "TotalPoints": st.column_config.NumberColumn("⭐ Points", format="%d")
+            },
+            use_container_width=True,
+            hide_index=True
+        )
 
         # --- Current Standings Section ---
-    st.header(f"📊 Current Overall Standings (After {latest_gw} Gameweeks)")
+        st.header(f"📊 Current Overall Standings (After {latest_gw} Gameweeks)")
         
         # Calculate cumulative standings
-    current_standings = calculate_standings(gameweeks)
-    show_standings_table(current_standings)
+        current_standings = calculate_standings(gameweeks)
+        show_standings_table(current_standings)
 
         # --- Historical Gameweeks Section ---
         st.markdown("---")
