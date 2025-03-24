@@ -408,11 +408,37 @@ def home_page():
     st.image("images/ipsosgames2025pic.jpg")
 
 
+# Initialize session state variables if not already present
+if "team_assignments" not in st.session_state:
+    st.session_state.team_assignments = {
+        "Team Security": [],
+        "Team Speed": [],
+        "Team Substance": [],
+        "Team Simplicity": []
+    }
+
+if "incompatible_pairs" not in st.session_state:
+    # Example incompatible pairs; replace with your actual data
+    st.session_state.incompatible_pairs = {
+        "Alice": ["Bob"],
+        "Bob": ["Alice"],
+        # Add more pairs as needed
+    }
+
+if "available_staff" not in st.session_state:
+    # Example staff data; replace with your actual data
+    st.session_state.available_staff = pd.DataFrame({
+        "Name": ["Alice", "Bob", "Charlie", "David", "Eve"],
+        "Category": ["Leadership", "Floor 2", "Floor 3", "Floor 4", "Floor 5"],
+        "Group in previous game": ["A", "B", "A", "C", "B"],
+        "Level": ["Senior", "Junior", "Senior", "Junior", "Senior"],
+        "Gender": ["F", "M", "M", "M", "F"]
+    })
+
 def check_constraints(staff_member, team):
     """
     Check if assigning a staff member to a team violates constraints.
-    Currently, this only verifies incompatible pairs. Additional constraints (e.g., team balance)
-    can be added here as needed.
+    Currently checks incompatible pairs; add more constraints (e.g., team balance) as needed.
 
     Args:
         staff_member (dict): The staff member's data.
@@ -428,13 +454,13 @@ def check_constraints(staff_member, team):
 
 def calculate_best_team(staff, eligible_teams):
     """
-    Calculate a penalty score for each eligible team based on attribute matches with the staff member.
-    Attributes and their weights:
+    Calculate a penalty score for each eligible team based on attribute matches.
+    Attributes and weights:
         - "Group in previous game": ×5
         - "Level": ×3
         - "Category" (Office floor): ×2
         - "Gender": ×2
-    The team with the lowest penalty is selected, with team size and randomness breaking ties.
+    Selects the team with the lowest penalty, using team size and randomness for tie-breaking.
 
     Args:
         staff (dict): The staff member's data.
@@ -566,7 +592,7 @@ def team_assignment_page():
                                 st.session_state.available_staff["Name"] != staff["Name"]
                             ]
                             st.session_state.selected_staff = staff.to_dict()
-                            assign_team_member()   
+                            assign_team_member()
 
 def standings_page():
     """Enhanced Standings Page with Correct Podium Ordering"""
