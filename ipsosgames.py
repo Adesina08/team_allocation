@@ -502,7 +502,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
     
-    st.markdown("### Available Staff Members")
+st.markdown("### Available Staff Members")
     
     # When all staff have been assigned, show a download button to save assignments
     if st.session_state.available_staff.empty:
