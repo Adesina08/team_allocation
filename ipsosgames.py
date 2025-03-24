@@ -495,12 +495,12 @@ def team_assignment_page():
             else:
                 members_html = ""
 st.markdown(f"""
-    <div class='team-container {team_colors[team]}'>
-        <h3>{team} ({count})</h3>
-        {members_html}
-    </div>
-    """, unsafe_allow_html=True)
-                {members_html}\n                </div>\n            \"\"\", unsafe_allow_html=True)
+<div class='team-container {team_colors[team]}'>
+    <h3>{team} ({count})</h3>
+    {members_html}
+</div>
+""", unsafe_allow_html=True)
+
     
     st.markdown("### Available Staff Members")
     
