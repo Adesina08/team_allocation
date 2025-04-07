@@ -479,22 +479,22 @@ def team_assignment_page():
 
         shuffle_staff_list()  # Randomize at the start of display
 
-for category in categories:
-    staff_df = st.session_state.available_staff[
-        st.session_state.available_staff["Category"] == category
-    ]
-    if not staff_df.empty:
-        st.markdown(f"#### {category.replace('0-1', '0 - 1')}")
-        cols = st.columns(3)
-        for idx, (_, staff) in enumerate(staff_df.iterrows()):
-            with cols[idx % 3]:
-                if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
-                    # CORRECTED LINE BELOW
-                    st.session_state.available_staff = st.session_state.available_staff[
-                        st.session_state.available_staff["Name"] != staff["Name"]
-                    ]
-                    st.session_state.selected_staff = staff.to_dict()
-                    assign_team_member()
+        for category in categories:
+            staff_df = st.session_state.available_staff[
+                st.session_state.available_staff["Category"] == category
+            ]
+            if not staff_df.empty:
+                st.markdown(f"#### {category.replace('0-1', '0 - 1')}")
+                cols = st.columns(3)
+                for idx, (_, staff) in enumerate(staff_df.iterrows()):
+                    with cols[idx % 3]:
+                        if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
+                            # CORRECTED LINE BELOW
+                            st.session_state.available_staff = st.session_state.available_staff[
+                                st.session_state.available_staff["Name"] != staff["Name"]
+                            ]
+                            st.session_state.selected_staff = staff.to_dict()
+                            assign_team_member()
 
 
 def assign_team_member():
