@@ -1,3 +1,5 @@
+
+
 import streamlit as st
 import pandas as pd
 import time
@@ -419,7 +421,6 @@ def assign_team_member():
     # Re-shuffle available staff for subsequent rounds
     shuffle_staff_list()
 
-
     # Show a success message
     success = st.markdown(
         f"""
@@ -490,9 +491,11 @@ def team_assignment_page():
                 for idx, (_, staff) in enumerate(staff_df.iterrows()):
                     with cols[idx % 3]:
                         if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
-                            st.session_state["selected_staff"] = staff.to_dict()
-                            st.session_state["assign_trigger"] = True
-                            st.rerun()
+                            st.session_state.available_staff = st.session_state.available_staff[
+                                st.session_state.available_staff["Name"] != staff["Name"]
+                            ]
+                            st.session_state.selected_staff = staff.to_dict()
+                            assign_team_member()
 
 
 def assign_team_member():
