@@ -50,6 +50,9 @@ if "team_assignments" not in st.session_state:
             {"Name": "OLUFISAYO-MICHAEL, Abimbola"}, {"Name": "OGUNNAIKE, Jane"}
         ]
     }
+
+if "selected_staff" not in st.session_state:  # 🚨 FIXED HERE
+    st.session_state.selected_staff = None
 if "available_staff" not in st.session_state:
     excel_file_path = "staffs.xlsx"
     df = pd.read_excel(excel_file_path)
@@ -386,6 +389,9 @@ def shuffle_staff_list():
 
 def assign_team_member():
     """Combined assignment logic with countdown and constraints"""
+    if "selected_staff" not in st.session_state or not st.session_state.selected_staff:
+        return  # 🚨 FIXED HERE: Added safety check
+    
     staff = st.session_state.selected_staff
 
     # Countdown animation
@@ -413,13 +419,26 @@ def assign_team_member():
     st.session_state.team_assignments[assigned_team].append(staff)
     
     # Auto-scroll and success message
-    components.html("""<script>...scroll code...</script>""", height=0)
-    success = st.markdown(f"""<div class='success-message'>...""", unsafe_allow_html=True)
+    components.html("""
+    <script>
+        window.parent.document.querySelector('.scroll-target').scrollIntoView();
+    </script>
+    """, height=0)
+    
+    # Show success message
+    success = st.markdown(
+        f"""<div class='success-message'>
+            <h2>🎉 Success!</h2>
+            <p>{staff['Name']} has been assigned to {assigned_team}! 👍</p>
+        </div>""", 
+        unsafe_allow_html=True
+    )
     time.sleep(1.5)
     success.empty()
     
-    # Refresh data
+    # Refresh data and UI
     shuffle_staff_list()
+    st.session_state.selected_staff = None  # 🚨 FIXED HERE: Clear selection
     st.rerun()
 
 def team_assignment_page():
@@ -461,30 +480,27 @@ def team_assignment_page():
             mime="application/json"
         )
     else:
-        categories = ["Leadership", "Diaspora", "Floor 0-1", "Floor 2", "Floor 3", "Floor 4", "Floor 5"]
+        categories = ["Leadership", "Diaspora", "Floor 0-1", "Floor 2", 
+                     "Floor 3", "Floor 4", "Floor 5"]
 
-        # Create display copy to preserve original indices
-        display_df = st.session_state.available_staff.copy().sample(frac=1)
+        # Create display copy (don't modify original)
+        display_df = st.session_state.available_staff.copy().sample(frac=1)  # 🚨 FIXED HERE
 
         for category in categories:
             staff_df = display_df[display_df["Category"] == category]
             if not staff_df.empty:
                 st.markdown(f"#### {category.replace('0-1', '0 - 1')}")
                 cols = st.columns(3)
-                
-                # Use iteritems instead of iterrows for stability
                 for idx, (_, staff) in enumerate(staff_df.iterrows()):
                     with cols[idx % 3]:
-                        # Add category to button key for uniqueness
-                        btn_key = f"staff_{staff['Name']}_{category}"
+                        # Use unique key with name + category
+                        btn_key = f"staff_{staff['Name']}_{category}_{idx}"  # 🚨 FIXED HERE
                         if st.button(staff["Name"], key=btn_key):
                             # Remove by name from original DF
                             st.session_state.available_staff = st.session_state.available_staff[
                                 st.session_state.available_staff["Name"] != staff["Name"]
-                            ]
                             st.session_state.selected_staff = staff.to_dict()
-                            assign_team_member()
-
+                            st.rerun()  # 🚨 FIXED HERE: Immediate refresh
 
 def standings_page():
     """Enhanced Standings Page with Correct Podium Ordering"""
