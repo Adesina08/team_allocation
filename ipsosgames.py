@@ -29,15 +29,39 @@ if "page" not in st.session_state:
     st.session_state.page = "home"
 if "team_assignments" not in st.session_state:
     st.session_state.team_assignments = {
-        "Team Security": [],
-        "Team Simplicity": [],
-        "Team Speed": [],
-        "Team Substance": [],
+        "Team Security": [
+            {"Name": "UFDMBA, Stella"}, {"Name": "ADIGUN, Olamide"}, 
+            {"Name": "OYEKOLA, Ruth"}, {"Name": "ADFYOLANU, Adeyemi"},
+            {"Name": "ANUFORO, Sylvester"}, {"Name": "EZENDU, Chiamaka"}
+        ],
+        "Team Simplicity": [
+            {"Name": "OLADEJO, Michael"}, {"Name": "AYOOLA, Victoria"},
+            {"Name": "OLAPEJU, Henrietta"}, {"Name": "SALAMI, Ibitayo"},
+            {"Name": "OBARO, Micheal"}
+        ],
+        "Team Speed": [
+            {"Name": "OMIWE, Winifred"}, {"Name": "BAKARE, Olasubomi"},
+            {"Name": "MOSUGU, Ronke"}, {"Name": "DAIRO, Opeyemi"},
+            {"Name": "OKUNLOLA, Fatimoh"}
+        ],
+        "Team Substance": [
+            {"Name": "OWODUNNI, Mayedun"}, {"Name": "MEKULEYI, Oluwapelumi"},
+            {"Name": "HYACINTH, Jackson"}, {"Name": "OLAJUBU Olaniyi"},
+            {"Name": "OLUFISAYO-MICHAEL, Abimbola"}, {"Name": "OGUNNAIKE, Jane"}
+        ]
     }
 if "available_staff" not in st.session_state:
     excel_file_path = "staffs.xlsx"
     df = pd.read_excel(excel_file_path)
-    st.session_state.available_staff = df
+    
+    # Get list of pre-assigned names
+    pre_assigned = [
+        member["Name"] for team in st.session_state.team_assignments.values() 
+        for member in team
+    ]
+    
+    # Filter out pre-assigned staff
+    st.session_state.available_staff = df[~df["Name"].isin(pre_assigned)]
     
     # Load incompatible pairs
     incompatible_pairs = {}
