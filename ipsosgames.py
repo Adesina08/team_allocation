@@ -50,9 +50,6 @@ if "team_assignments" not in st.session_state:
             {"Name": "OLUFISAYO-MICHAEL, Abimbola"}, {"Name": "OGUNNAIKE, Jane"}
         ]
     }
-
-if "selected_staff" not in st.session_state:  # 🚨 FIXED HERE
-    st.session_state.selected_staff = None
 if "available_staff" not in st.session_state:
     excel_file_path = "staffs.xlsx"
     df = pd.read_excel(excel_file_path)
@@ -336,116 +333,81 @@ def home_page():
     # </div>
     # """, unsafe_allow_html=True)
 
-
-def check_constraints(staff_member, team):
-    """Check only incompatible pairs and team balance."""
-    current_team = st.session_state.team_assignments[team]
-
-    # Incompatibility check
-    incompatible_staff = st.session_state.incompatible_pairs.get(staff_member["Name"], [])
-    current_members = [m["Name"] for m in current_team]
-    if any(name in current_members for name in incompatible_staff):
-        return False
-
-    return True
-
-
 def calculate_best_team(staff, eligible_teams):
     """
-    Calculate a penalty score for each eligible team based on matching attributes:
-      - "Group in previous game" (×5)
-      - "Level" (×3)
-      - "Office floor" (×2)
-      - "Gender" (×2)
-    Returns the team (from eligible_teams) with the lowest penalty.
+    Enhanced fairness algorithm using:
+    - Team size balancing
+    - Gender diversity protection
+    - Level distribution
+    - Category diversity
+    - Random tie-breaking
     """
     team_scores = []
-
+    team_sizes = {t: len(m) for t, m in st.session_state.team_assignments.items()}
+    avg_size = sum(team_sizes.values()) / len(team_sizes)
+    
     for team in eligible_teams:
         members = st.session_state.team_assignments[team]
-        prev_group_count = sum(1 for m in members if m.get("Group in previous game") == staff.get("Group in previous game"))
-        level_count = sum(1 for m in members if m.get("Level") == staff.get("Level"))
-        office_floor_count = sum(1 for m in members if m.get("Category") == staff.get("Category"))
-        gender_count = sum(1 for m in members if m.get("Gender") == staff.get("Gender"))
-
+        current_size = team_sizes[team]
+        
+        # Diversity metrics
+        same_level = sum(1 for m in members if m["Level"] == staff["Level"])
+        same_category = sum(1 for m in members if m["Category"] == staff["Category"])
+        same_gender = sum(1 for m in members if m["Gender"] == staff["Gender"])
+        
+        # Size penalty (encourage balanced teams)
+        size_penalty = abs(current_size - avg_size) ** 1.2
+        
+        # Diversity penalty weights
         penalty = (
-            prev_group_count * 5 +
-            level_count * 3 +
-            office_floor_count * 2 +
-            gender_count * 2
+            (same_level * 4) +      # Strong penalty for same level
+            (same_category * 3) +   # Medium penalty for same category
+            (same_gender * 2) +     # Small penalty for same gender
+            size_penalty
         )
-
-        # Add a random tie-breaker so that even if penalties are equal the assignment is randomized
-        team_scores.append((penalty, len(members), random.random(), team))
-
-    team_scores.sort(key=lambda x: (x[0], x[1], x[2]))
-    return team_scores[0][3]
-
-
-def shuffle_staff_list():
-    """Ensure available staff order is randomized for every round."""
-    st.session_state.available_staff = st.session_state.available_staff.sample(frac=1).reset_index(drop=True)
-
-
-def assign_team_member():
-    """Combined assignment logic with countdown and constraints"""
-    if "selected_staff" not in st.session_state or not st.session_state.selected_staff:
-        return  # 🚨 FIXED HERE: Added safety check
+        
+        # Add randomness for tie-breaking
+        team_scores.append((
+            penalty,
+            random.random(),  # Random factor
+            -len(set(m["Level"] for m in members)),  # Prefer level diversity
+            current_size,     # Prefer smaller teams
+            team
+        ))
     
-    staff = st.session_state.selected_staff
+    # Sort by: 1) Penalty 2) Random 3) Level diversity 4) Team size
+    team_scores.sort()
+    
+    return team_scores[0][-1]
 
-    # Countdown animation
-    countdown = st.empty()
-    for i in range(3, 0, -1):
-        countdown.markdown(f"<div class='countdown'>{i}</div>", unsafe_allow_html=True)
-        time.sleep(1.5)
-    countdown.empty()
+def check_constraints(staff_member, team):
+    """Enhanced constraints with gender balance"""
+    current_team = st.session_state.team_assignments[team]
+    current_members = [m["Name"] for m in current_team]
+    
+    # 1. Hard constraints
+    if any(name in current_members for name in st.session_state.incompatible_pairs.get(staff_member["Name"], [])):
+        return False
+        
+    # 2. Gender balance (max 75% same gender)
+    if len(current_team) >= 4:
+        gender_count = sum(1 for m in current_team if m["Gender"] == staff_member["Gender"])
+        if (gender_count + 1) / (len(current_team) + 1) > 0.75:
+            return False
+            
+    # 3. Max team size
+    if len(current_team) >= 7:
+        return False
+        
+    return True
 
-    # Randomize team order each time
-    teams = list(st.session_state.team_assignments.keys())
-    random.shuffle(teams)
-
-    # Find eligible teams
-    eligible_teams = [team for team in teams if check_constraints(staff, team)]
-    
-    # Choose best team
-    if eligible_teams:
-        assigned_team = calculate_best_team(staff, eligible_teams)
-    else:
-        assigned_team = min(st.session_state.team_assignments, 
-                          key=lambda t: len(st.session_state.team_assignments[t]))
-    
-    # Update assignments
-    st.session_state.team_assignments[assigned_team].append(staff)
-    
-    # Auto-scroll and success message
-    components.html("""
-    <script>
-        window.parent.document.querySelector('.scroll-target').scrollIntoView();
-    </script>
-    """, height=0)
-    
-    # Show success message
-    success = st.markdown(
-        f"""<div class='success-message'>
-            <h2>🎉 Success!</h2>
-            <p>{staff['Name']} has been assigned to {assigned_team}! 👍</p>
-        </div>""", 
-        unsafe_allow_html=True
-    )
-    time.sleep(1.5)
-    success.empty()
-    
-    # Refresh data and UI
-    shuffle_staff_list()
-    st.session_state.selected_staff = None  # 🚨 FIXED HERE: Clear selection
-    st.rerun()
-
+# Add this in your team_assignment_page function where the download button appears:
 def team_assignment_page():
-    """Modified team assignment page with persistent keys and stable DataFrame handling"""
+    """Modified team assignment page with immediate updates"""
     st.title("Team Assignment Dashboard")
+    # Ensure that there is an element to scroll to:
     st.markdown("<div class='scroll-target'></div>", unsafe_allow_html=True)
-
+    
     # Display teams
     cols = st.columns(4)
     team_colors = {
@@ -458,24 +420,24 @@ def team_assignment_page():
     for idx, (team, members) in enumerate(st.session_state.team_assignments.items()):
         with cols[idx]:
             count = len(members)
-            member_cards = "".join([f"<p>{m['Name']}</p>" for m in members]) if members else ""
-            st.markdown(
-                f"""
+            # Only create the members list container if there are assigned members
+            if members:
+                member_cards = "".join([f"<p>{m['Name']}</p>" for m in members])
+                members_html = f"<div class='members-list'>{member_cards}</div>"
+            else:
+                members_html = ""
+            st.markdown(f"""
                 <div class='team-container {team_colors[team]}'>
                     <h3>{team} ({count})</h3>
-                    <div class='members-list'>{member_cards}</div>
+                    {members_html}
                 </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-    # Check if a staff member has been selected and trigger assignment
-    if st.session_state.selected_staff is not None:
-        assign_team_member()
+            """, unsafe_allow_html=True)
 
     st.markdown("### Available Staff Members")
-
+    
+    # When all staff have been assigned, show a download button to save assignments
     if st.session_state.available_staff.empty:
+        # Convert team assignments to a JSON string for download
         assignments_json = json.dumps(st.session_state.team_assignments, indent=2)
         st.download_button(
             label="Download Team Assignments",
@@ -484,28 +446,92 @@ def team_assignment_page():
             mime="application/json"
         )
     else:
+        # Fixed category display for Floor 0-1
         categories = ["Leadership", "Diaspora", "Floor 0-1", "Floor 2", 
-                     "Floor 3", "Floor 4", "Floor 5"]
-
-        # Create display copy (don't modify original)
-        display_df = st.session_state.available_staff.copy().sample(frac=1)
-
+                      "Floor 3", "Floor 4", "Floor 5"]
+    
         for category in categories:
-            staff_df = display_df[display_df["Category"] == category]
+            staff_df = st.session_state.available_staff[
+                st.session_state.available_staff["Category"] == category
+            ]
             if not staff_df.empty:
-                st.markdown(f"#### {category.replace('0-1', '0 - 1')}")
-                cols = st.columns(3)
+                st.markdown(f"#### {category.replace('0-1', '0 - 1')}")  # Better formatting
+                cols = st.columns(6)
                 for idx, (_, staff) in enumerate(staff_df.iterrows()):
-                    with cols[idx % 3]:
-                        # Use unique key with name + category
-                        btn_key = f"staff_{staff['Name']}_{category}_{idx}"
-                        if st.button(staff["Name"], key=btn_key):
-                            # Remove by name from original DF
+                    with cols[idx % 6]:
+                        if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
+                            # Immediate removal and UI update
                             st.session_state.available_staff = st.session_state.available_staff[
-                                st.session_state.available_staff["Name"] != staff["Name"]
-                            ]
+                                st.session_state.available_staff["Name"] != staff["Name"]]
                             st.session_state.selected_staff = staff.to_dict()
-                            st.rerun()
+                            assign_team_member()
+    
+    if st.session_state.available_staff.empty:
+        # Export team assignments
+        assignments_json = json.dumps(st.session_state.team_assignments, indent=2)
+        st.download_button(
+            label="📥 Download Team Assignments (JSON)",
+            data=assignments_json,
+            file_name="team_assignments.json",
+            mime="application/json"
+        )
+        
+        # Export remaining staff list (empty in this case)
+        st.warning("All staff have been assigned!")
+    else:
+        # Add continuous export capability
+        csv = st.session_state.available_staff.to_csv(index=False)
+        st.download_button(
+            label="📥 Export Remaining Staff (CSV)",
+            data=csv,
+            file_name="remaining_staff.csv",
+            mime="text/csv"
+        )
+
+def assign_team_member():
+    """Assignment logic with the deterministic penalty algorithm."""
+    staff = st.session_state.selected_staff
+
+    # Countdown for dramatic effect
+    countdown = st.empty()
+    for i in range(3, 0, -1):
+        countdown.markdown(f"<div class='countdown'>{i}</div>", unsafe_allow_html=True)
+        time.sleep(1.5)
+    countdown.empty()
+
+    # Determine eligible teams based on constraints
+    eligible_teams = [team for team in st.session_state.team_assignments if check_constraints(staff, team)]
+    
+    if eligible_teams:
+        # Use the penalty algorithm to choose the best team
+        assigned_team = calculate_best_team(staff, eligible_teams)
+    else:
+        # Fallback: assign to the team with the smallest number of members
+        assigned_team = min(st.session_state.team_assignments, key=lambda t: len(st.session_state.team_assignments[t]))
+    
+    # Update team assignments
+    st.session_state.team_assignments[assigned_team].append(st.session_state.selected_staff)
+    
+    # Auto-scroll back to the top
+    components.html("""
+    <script>
+        window.parent.document.querySelector('.scroll-target').scrollIntoView();
+    </script>
+    """, height=0)
+    
+    # Show a success message
+    success = st.markdown(
+        f"""<div class='success-message'>
+            <h2>🎉 Success!</h2>
+            <p>{staff["Name"]} has been assigned to Team {assigned_team}!👍</p>
+        </div>""", 
+        unsafe_allow_html=True
+    )
+    time.sleep(1.5)
+    success.empty()
+    
+    # Force UI update
+    st.rerun()
 
 def standings_page():
     """Enhanced Standings Page with Correct Podium Ordering"""
