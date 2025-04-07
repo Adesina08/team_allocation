@@ -499,6 +499,7 @@ def team_assignment_page():
                             # Remove by name from original DF
                             st.session_state.available_staff = st.session_state.available_staff[
                                 st.session_state.available_staff["Name"] != staff["Name"]
+                            ]
                             st.session_state.selected_staff = staff.to_dict()
                             st.rerun()  # 🚨 FIXED HERE: Immediate refresh
 
