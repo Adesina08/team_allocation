@@ -32,22 +32,28 @@ if "team_assignments" not in st.session_state:
         "Team Security": [
             {"Name": "UFDMBA, Stella"}, {"Name": "ADIGUN, Olamide"}, 
             {"Name": "OYEKOLA, Ruth"}, {"Name": "ADFYOLANU, Adeyemi"},
-            {"Name": "ANUFORO, Sylvester"}, {"Name": "EZENDU, Chiamaka"}
+            {"Name": "ANUFORO, Sylvester"}, {"Name": "EZENDU, Chiamaka"},
+            {"Name": "OKEYMOSES, Precious"},{"Name": "AROGBO, Sunday"}, {"Name": "FATOYINBO, Ibrahim"}
         ],
         "Team Simplicity": [
             {"Name": "OLADEJO, Michael"}, {"Name": "AYOOLA, Victoria"},
             {"Name": "OLAPEJU, Henrietta"}, {"Name": "SALAMI, Ibitayo"},
-            {"Name": "OBARO, Micheal"}
+            {"Name": "OBARO, Micheal"}, {"Name": "DADA, Patricia"},
+            {"Name": "BUSARI, Morufudeen"}, {"Name": "ANIFOWOSE, Abdullateef"}, {"Name": "PA New staff"}
         ],
         "Team Speed": [
             {"Name": "OMIWE, Winifred"}, {"Name": "BAKARE, Olasubomi"},
             {"Name": "MOSUGU, Ronke"}, {"Name": "DAIRO, Opeyemi"},
-            {"Name": "OKUNLOLA, Fatimoh"}
+            {"Name": "OKUNLOLA, Fatimoh"},{"Name": "AKOGUM, Bisola "},
+            {"Name": "FUANPOE, Beatrice"},{"Name": "AJIBOLA, Miriam"} 
         ],
         "Team Substance": [
             {"Name": "OWODUNNI, Mayedun"}, {"Name": "MEKULEYI, Oluwapelumi"},
             {"Name": "HYACINTH, Jackson"}, {"Name": "OLAJUBU Olaniyi"},
-            {"Name": "OLUFISAYO-MICHAEL, Abimbola"}, {"Name": "OGUNNAIKE, Jane"}
+            {"Name": "OLUFISAYO-MICHAEL, Abimbola"}, {"Name": "OGUNNAIKE, Jane"}, 
+            {"Name": "JOHNSON-AJALA, Tokunbo"}, {"Name": "OLUWADARE, Paul"}, 
+            {"Name": "BABALOLA, Zainab"} 
+
         ]
     }
 if "available_staff" not in st.session_state:
