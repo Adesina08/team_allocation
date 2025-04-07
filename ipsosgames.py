@@ -492,8 +492,8 @@ def team_assignment_page():
                     with cols[idx % 3]:
                         if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
                             st.session_state.available_staff = st.session_state.available_staff[
-                                st.session_state.available_staff["Name"] != staff["Name"]
-                            ]
+                                    st.session_state.available_staff["Name"] != staff["Name"]
+                                ]
                             st.session_state.selected_staff = staff.to_dict()
                             assign_team_member()
 
