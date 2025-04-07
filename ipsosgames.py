@@ -25,8 +25,6 @@ st.set_page_config(
 )
 
 # Initialize session state with minimum team size
-if "selected_staff" not in st.session_state:
-    st.session_state.selected_staff = None
 if "page" not in st.session_state:
     st.session_state.page = "home"
 if "team_assignments" not in st.session_state:
