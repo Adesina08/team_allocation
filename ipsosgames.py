@@ -469,6 +469,10 @@ def team_assignment_page():
                 unsafe_allow_html=True
             )
 
+    # Check if a staff member has been selected and trigger assignment
+    if st.session_state.selected_staff is not None:
+        assign_team_member()
+
     st.markdown("### Available Staff Members")
 
     if st.session_state.available_staff.empty:
@@ -484,7 +488,7 @@ def team_assignment_page():
                      "Floor 3", "Floor 4", "Floor 5"]
 
         # Create display copy (don't modify original)
-        display_df = st.session_state.available_staff.copy().sample(frac=1)  # 🚨 FIXED HERE
+        display_df = st.session_state.available_staff.copy().sample(frac=1)
 
         for category in categories:
             staff_df = display_df[display_df["Category"] == category]
@@ -494,14 +498,14 @@ def team_assignment_page():
                 for idx, (_, staff) in enumerate(staff_df.iterrows()):
                     with cols[idx % 3]:
                         # Use unique key with name + category
-                        btn_key = f"staff_{staff['Name']}_{category}_{idx}"  # 🚨 FIXED HERE
+                        btn_key = f"staff_{staff['Name']}_{category}_{idx}"
                         if st.button(staff["Name"], key=btn_key):
                             # Remove by name from original DF
                             st.session_state.available_staff = st.session_state.available_staff[
                                 st.session_state.available_staff["Name"] != staff["Name"]
                             ]
                             st.session_state.selected_staff = staff.to_dict()
-                            st.rerun()  # 🚨 FIXED HERE: Immediate refresh
+                            st.rerun()
 
 def standings_page():
     """Enhanced Standings Page with Correct Podium Ordering"""
