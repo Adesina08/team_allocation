@@ -417,7 +417,10 @@ def assign_team_member():
     st.session_state.team_assignments[assigned_team].append(st.session_state.selected_staff)
 
     # Re-shuffle available staff for subsequent rounds
+if "staff_shuffled" not in st.session_state:
     shuffle_staff_list()
+    st.session_state["staff_shuffled"] = True
+
 
     # Show a success message
     success = st.markdown(
@@ -489,11 +492,9 @@ def team_assignment_page():
                 for idx, (_, staff) in enumerate(staff_df.iterrows()):
                     with cols[idx % 3]:
                         if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
-                            st.session_state.available_staff = st.session_state.available_staff[
-                                st.session_state.available_staff["Name"] != staff["Name"]
-                            ]
-                            st.session_state.selected_staff = staff.to_dict()
-                            assign_team_member()
+                            st.session_state["selected_staff"] = staff.to_dict()
+                            st.session_state["assign_trigger"] = True
+                            st.rerun()
 
 
 def assign_team_member():
