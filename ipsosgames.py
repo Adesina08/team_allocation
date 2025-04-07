@@ -381,27 +381,44 @@ def calculate_best_team(staff, eligible_teams):
     return team_scores[0][-1]
 
 def check_constraints(staff_member, team):
-    """Enhanced constraints with gender balance"""
+    """Check only incompatible pairs and team balance"""
     current_team = st.session_state.team_assignments[team]
-    current_members = [m["Name"] for m in current_team]
     
-    # 1. Hard constraints
-    if any(name in current_members for name in st.session_state.incompatible_pairs.get(staff_member["Name"], [])):
+    # 1. Incompatibility check
+    incompatible_staff = st.session_state.incompatible_pairs.get(staff_member["Name"], [])
+    current_members = [m["Name"] for m in current_team]
+    if any(name in current_members for name in incompatible_staff):
         return False
-        
-    # 2. Gender balance (max 75% same gender)
-    if len(current_team) >= 4:
-        gender_count = sum(1 for m in current_team if m["Gender"] == staff_member["Gender"])
-        if (gender_count + 1) / (len(current_team) + 1) > 0.75:
-            return False
-            
-    # 3. Max team size
-    if len(current_team) >= 7:
-        return False
-        
+    
+    # # 2. Minimum team size protection
+    # team_sizes = {t: len(m) for t, m in st.session_state.team_assignments.items()}
+    # min_size = min(team_sizes.values())
+    # if len(current_team) - min_size >= 2:
+    #     return False
+    
     return True
 
-# Add this in your team_assignment_page function where the download button appears:
+def calculate_best_team(staff, eligible_teams):
+    """
+    Calculate a penalty score for each eligible team based on matching attributes:
+      - "Group in previous game" (×5)
+      - "Level" (×3)
+      - "Office floor" (×2)
+      - "Gender" (×2)
+    Returns the team (from eligible_teams) with the lowest penalty.
+    """
+    team_scores = []
+    for team in eligible_teams:
+        members = st.session_state.team_assignments[team]
+        prev_group_count = sum(1 for m in members if m.get("Group in previous game") == staff.get("Group in previous game"))
+        level_count = sum(1 for m in members if m.get("Level") == staff.get("Level"))
+        office_floor_count = sum(1 for m in members if m.get("Category") == staff.get("Category"))
+        gender_count = sum(1 for m in members if m.get("Gender") == staff.get("Gender"))
+        penalty = (prev_group_count * 5) + (level_count * 3) + (office_floor_count * 2) + (gender_count * 2)
+        team_scores.append((penalty, len(members), team))
+    team_scores.sort(key=lambda x: (x[0], x[1], x[2]))
+    return team_scores[0][2]
+
 def team_assignment_page():
     """Modified team assignment page with immediate updates"""
     st.title("Team Assignment Dashboard")
@@ -450,43 +467,21 @@ def team_assignment_page():
         categories = ["Leadership", "Diaspora", "Floor 0-1", "Floor 2", 
                       "Floor 3", "Floor 4", "Floor 5"]
     
-        for category in categories:
-            staff_df = st.session_state.available_staff[
-                st.session_state.available_staff["Category"] == category
-            ]
-            if not staff_df.empty:
-                st.markdown(f"#### {category.replace('0-1', '0 - 1')}")  # Better formatting
-                cols = st.columns(6)
-                for idx, (_, staff) in enumerate(staff_df.iterrows()):
-                    with cols[idx % 6]:
-                        if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
+    for category in categories:
+        staff_df = st.session_state.available_staff[
+            st.session_state.available_staff["Category"] == category
+        ]
+        if not staff_df.empty:
+            st.markdown(f"#### {category.replace('0-1', '0 - 1')}")
+            cols = st.columns((1, 1, 1))  # 3 columns
+            for idx, (_, staff) in enumerate(staff_df.iterrows()):
+                with cols[idx % 3]:  # Changed from 6 to 3 columns
+                    if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
                             # Immediate removal and UI update
                             st.session_state.available_staff = st.session_state.available_staff[
                                 st.session_state.available_staff["Name"] != staff["Name"]]
                             st.session_state.selected_staff = staff.to_dict()
                             assign_team_member()
-    
-    if st.session_state.available_staff.empty:
-        # Export team assignments
-        assignments_json = json.dumps(st.session_state.team_assignments, indent=2)
-        st.download_button(
-            label="📥 Download Team Assignments (JSON)",
-            data=assignments_json,
-            file_name="team_assignments.json",
-            mime="application/json"
-        )
-        
-        # Export remaining staff list (empty in this case)
-        st.warning("All staff have been assigned!")
-    else:
-        # Add continuous export capability
-        csv = st.session_state.available_staff.to_csv(index=False)
-        st.download_button(
-            label="📥 Export Remaining Staff (CSV)",
-            data=csv,
-            file_name="remaining_staff.csv",
-            mime="text/csv"
-        )
 
 def assign_team_member():
     """Assignment logic with the deterministic penalty algorithm."""
@@ -527,7 +522,7 @@ def assign_team_member():
         </div>""", 
         unsafe_allow_html=True
     )
-    time.sleep(1.5)
+    time.sleep(3.5)
     success.empty()
     
     # Force UI update
