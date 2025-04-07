@@ -437,7 +437,7 @@ def assign_team_member():
 
 
 def team_assignment_page():
-    """Modified team assignment page with immediate updates and multi-round randomization."""
+    """Modified team assignment page with persistent keys and stable DataFrame handling"""
     st.title("Team Assignment Dashboard")
     st.markdown("<div class='scroll-target'></div>", unsafe_allow_html=True)
 
@@ -480,21 +480,19 @@ def team_assignment_page():
         shuffle_staff_list()  # Randomize at the start of display
 
         for category in categories:
-            staff_df = st.session_state.available_staff[
-                st.session_state.available_staff["Category"] == category
-            ]
+            staff_df = current_staff[current_staff["Category"] == category]
             if not staff_df.empty:
                 st.markdown(f"#### {category.replace('0-1', '0 - 1')}")
                 cols = st.columns(3)
-                for idx, (_, staff) in enumerate(staff_df.iterrows()):
+                for idx, staff in staff_df.iterrows():
                     with cols[idx % 3]:
-                        if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
-                            # CORRECTED LINE BELOW
-                            st.session_state.available_staff = st.session_state.available_staff[
-                                st.session_state.available_staff["Name"] != staff["Name"]
-                            ]
+                        # Use NAME as key identifier
+                        if st.button(staff["Name"], key=f"staff_{staff['Name']}"):
+                            # Remove by index to handle duplicates properly
+                            st.session_state.available_staff.drop(index=idx, inplace=True)
                             st.session_state.selected_staff = staff.to_dict()
                             assign_team_member()
+                            st.rerun()  # Force immediate update
 
 
 def assign_team_member():
