@@ -417,9 +417,7 @@ def assign_team_member():
     st.session_state.team_assignments[assigned_team].append(st.session_state.selected_staff)
 
     # Re-shuffle available staff for subsequent rounds
-if "staff_shuffled" not in st.session_state:
     shuffle_staff_list()
-    st.session_state["staff_shuffled"] = True
 
 
     # Show a success message
