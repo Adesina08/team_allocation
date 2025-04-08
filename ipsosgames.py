@@ -460,38 +460,38 @@ def team_assignment_page():
                 </div>
             """, unsafe_allow_html=True)
 
-    st.markdown("### Available Staff Members")
+    # st.markdown("### Available Staff Members")
     
-    # When all staff have been assigned, show a download button to save assignments
-    if st.session_state.available_staff.empty:
-        # Convert team assignments to a JSON string for download
-        assignments_json = json.dumps(st.session_state.team_assignments, indent=2)
-        st.download_button(
-            label="Download Team Assignments",
-            data=assignments_json,
-            file_name="team_assignments.json",
-            mime="application/json"
-        )
-    else:
-        # Fixed category display for Floor 0-1
-        categories = ["Leadership", "Diaspora", "Floor 0-1", "Floor 2", 
-                      "Floor 3", "Floor 4", "Floor 5"]
+    # # When all staff have been assigned, show a download button to save assignments
+    # if st.session_state.available_staff.empty:
+    #     # Convert team assignments to a JSON string for download
+    #     assignments_json = json.dumps(st.session_state.team_assignments, indent=2)
+    #     st.download_button(
+    #         label="Download Team Assignments",
+    #         data=assignments_json,
+    #         file_name="team_assignments.json",
+    #         mime="application/json"
+    #     )
+    # else:
+    #     # Fixed category display for Floor 0-1
+    #     categories = ["Leadership", "Diaspora", "Floor 0-1", "Floor 2", 
+    #                   "Floor 3", "Floor 4", "Floor 5"]
     
-    for category in categories:
-        staff_df = st.session_state.available_staff[
-            st.session_state.available_staff["Category"] == category
-        ]
-        if not staff_df.empty:
-            st.markdown(f"#### {category.replace('0-1', '0 - 1')}")
-            cols = st.columns((1, 1, 1))  # 3 columns
-            for idx, (_, staff) in enumerate(staff_df.iterrows()):
-                with cols[idx % 3]:  # Changed from 6 to 3 columns
-                    if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
-                            # Immediate removal and UI update
-                            st.session_state.available_staff = st.session_state.available_staff[
-                                st.session_state.available_staff["Name"] != staff["Name"]]
-                            st.session_state.selected_staff = staff.to_dict()
-                            assign_team_member()
+    # for category in categories:
+    #     staff_df = st.session_state.available_staff[
+    #         st.session_state.available_staff["Category"] == category
+    #     ]
+    #     if not staff_df.empty:
+    #         st.markdown(f"#### {category.replace('0-1', '0 - 1')}")
+    #         cols = st.columns((1, 1, 1))  # 3 columns
+    #         for idx, (_, staff) in enumerate(staff_df.iterrows()):
+    #             with cols[idx % 3]:  # Changed from 6 to 3 columns
+    #                 if st.button(staff["Name"], key=f"staff_{category}_{idx}"):
+    #                         # Immediate removal and UI update
+    #                         st.session_state.available_staff = st.session_state.available_staff[
+    #                             st.session_state.available_staff["Name"] != staff["Name"]]
+    #                         st.session_state.selected_staff = staff.to_dict()
+    #                         assign_team_member()
 
 def assign_team_member():
     """Assignment logic with the deterministic penalty algorithm."""
