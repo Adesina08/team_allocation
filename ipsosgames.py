@@ -54,7 +54,7 @@ if "team_assignments" not in st.session_state:
         "Team Speed": [
             {"Name": "OMIWE, Winifred"}, {"Name": "BAKARE, Olasubomi"},
             {"Name": "MOSUGU, Ronke"}, {"Name": "DAIRO, Opeyemi"},
-            {"Name": "OKUNLOLA, Fatimoh"}, {"Name": "AKOGUM, Bisola"},
+            {"Name": "OKUNLOLA, Fatimoh"}, {"Name": "OBARO, Micheal"},{"Name": "AKOGUM, Bisola"},
             {"Name": "FUANPOE, Beatrice"}, {"Name": "AJIBOLA, Miriam"},
             {"Name": "ABOH, Emmanuel"}, {"Name": "ESOTU, James"},
             {"Name": "OBI, Irene"}, {"Name": "ANDOHOL, Paul"},
