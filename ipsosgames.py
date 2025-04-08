@@ -31,7 +31,7 @@ if "team_assignments" not in st.session_state:
     st.session_state.team_assignments = {
         "Team Security": [
             {"Name": "UFDMBA, Stella"}, {"Name": "ADIGUN, Olamide"},
-            {"Name": "OYEKOLA, Ruth"}, {"Name": "ADFYOLANU, Adeyemi"},
+            {"Name": "OYEKOLA, Ruth"}, {"Name": "ADEBAYO, Kazim"},
             {"Name": "ANUFORO, Sylvester"}, {"Name": "EZENDU, Chiamaka"},
             {"Name": "OKEYMOSES, Precious"}, {"Name": "OSARO, Sunday"},
             {"Name": "FATOYINBO, Ibrahim"}, {"Name": "CARRILHO, Alexan"},
@@ -39,17 +39,16 @@ if "team_assignments" not in st.session_state:
             {"Name": "TOLUHI, Titilope"}, {"Name": "SALIMAN, Suleiman"},
             {"Name": "BASHIR, Muhammed"}, {"Name": "SANNI, Bolaji"},
             {"Name": "LASISI, Kehinde"}
-        ],
+        ], 
         "Team Simplicity": [
             {"Name": "OLADEJO, Michael"}, {"Name": "AYOOLA, Victoria"},
-            {"Name": "OLAPEJU, Henrietta"}, {"Name": "SALAMI, Ibitayo"},
-            {"Name": "OBARO, Micheal"}, {"Name": "DADA, Patricia"},
+            {"Name": "OLAPEJU, Henrietta"}, {"Name": "SALAMI, Ibitayo"}, {"Name": "DADA, Patricia"},
             {"Name": "BUSARI, Morufudeen"}, {"Name": "ANIFOWOSE, Abdullateef"},
             {"Name": "PA New staff"}, {"Name": "Arogbo Sunday"},{"Name": "NOAH, Monday"},
             {"Name": "OKEZIE, Bright"}, {"Name": "ISAH, Mariam"},
             {"Name": "OFIRI, Cletus"}, {"Name": "SALMAN, Abdulazeez"},
             {"Name": "AYINDE, Olajumoke"}, {"Name": "AKPAN, David"},
-            {"Name": "OYEBAD, Tosin"}, {"Name": "MOSES, Titilola"}
+            {"Name": "OYEBADE, Tosin"}, {"Name": "MOSES, Titilola"}
         ],
         "Team Speed": [
             {"Name": "OMIWE, Winifred"}, {"Name": "BAKARE, Olasubomi"},
@@ -542,12 +541,7 @@ def standings_page():
     """Enhanced Standings Page with Correct Podium Ordering"""
     st.title("🏆 Team Standings & Historical Performance")
     st.write("This page will display the standings and historical performance of teams.")
-    """Enhanced Standings Page with Correct Podium Ordering"""
-    st.title("🏆 Team Standings & Historical Performance")
-    st.write("This page will display the standings and historical performance of teams.")
-    """Enhanced Standings Page with Correct Podium Ordering"""
-    st.title("🏆 Team Standings & Historical Performance")
-    
+   
     try:
         # Load historical gameweek data
         gameweeks = pd.read_csv("gameweeks.csv")
