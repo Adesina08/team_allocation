@@ -30,7 +30,7 @@ if "page" not in st.session_state:
 if "team_assignments" not in st.session_state:
     st.session_state.team_assignments = {
         "Team Security": [
-            {"Name": "ADEBAYO, Kazeem"}, {"Name": "ADIGUN, Olamide"},
+            {"Name": "ADEBAYO, Kazeem"}, {"Name": "ADEYOLANU, Adeyemi"},{"Name": "ADIGUN, Olamide"},
             {"Name": "AMATU, Rufus"}, {"Name": "ANUFORO, Sylvester"},
             {"Name": "BASHIR, Muhammed"}, {"Name": "CARRILHO, Alexan"},
             {"Name": "EZENDU, Chiamaka"}, {"Name": "FATOYINBO, Ibrahim"},
@@ -48,11 +48,11 @@ if "team_assignments" not in st.session_state:
             {"Name": "ISAH, Mariam"}, {"Name": "MOSES, Titilola"},
             {"Name": "NOAH, Monday"}, {"Name": "OFIRI, Cletus"},
             {"Name": "OKEZIE, Bright"}, {"Name": "OLADEJO, Michael"},
-            {"Name": "OLAPEJU, Henrietta"}, {"Name": "OYEBADE, Tosin"},
+            {"Name": "OLAPEJU, Henrietta"}, {"Name": "OKUNLOLA, Fatimoh"},{"Name": "OYEBADE, Tosin"},
             {"Name": "SALAMI, Ibitayo"}, {"Name": "SALMAN, Abdulazeez"}
         ],
         "Team Speed": [
-            {"Name": "ABOH, Emmanuel"},
+            {"Name": "ABOH, Emmanuel"}, {"Name": "ADEYEMO, Adesina"},
             {"Name": "AJIBOLA, Miriam"}, {"Name": "AKOGUM, Bisola"}, 
             {"Name": "ANDOHOL, Paul"}, {"Name": "BABALOLA, Fiyinfoluwa"}, 
             {"Name": "BAKARE, Olasubomi"}, {"Name": "DAIRO, Opeyemi"},
@@ -63,10 +63,10 @@ if "team_assignments" not in st.session_state:
             {"Name": "OLAJUBU Olaniyi"}, {"Name": "ONONUJU, Godson"}, {"Name": "ONUAH, Peace"}
         ],
         "Team Substance": [
-            {"Name": "AZU, Divine"}, {"Name": "BABALOLA, Zainab"},
+            {"Name": "AZU, Divine"}, {"Name": "BABALOLA, Zainab"}, 
             {"Name": "HYACINTH, Jackson"}, {"Name": "JIMOH, Samuel"},
             {"Name": "JOHNSON-AJALA, Tokunbo"}, {"Name": "KUPAKIN, Prudence"},
-            {"Name": "MEKULEYI, Oluwapelumi"}, {"Name": "MOWOE, Ese"},
+            {"Name": "LAWANI, Ayodele"}, {"Name": "MEKULEYI, Oluwapelumi"}, {"Name": "MOWOE, Ese"},
             {"Name": "NESTOR, Gift"}, {"Name": "OGUNNAIKE, Jane"},
             {"Name": "OLATUNJI, Elijah"}, {"Name": "OLUFISAYO-MICHAEL, Abimbola"}, 
             {"Name": "OLUWADARE, Paul"}, {"Name": "OWOJORI, Jumoke"}, 
