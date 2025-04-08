@@ -431,7 +431,7 @@ def check_constraints(staff_member, team):
 
 def team_assignment_page():
     """Modified team assignment page with immediate updates"""
-    st.title("Team Assignment Dashboard")
+    st.title("Teams Allocation Dashboard")
     # Ensure that there is an element to scroll to:
     st.markdown("<div class='scroll-target'></div>", unsafe_allow_html=True)
     
