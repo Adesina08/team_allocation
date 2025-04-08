@@ -30,49 +30,51 @@ if "page" not in st.session_state:
 if "team_assignments" not in st.session_state:
     st.session_state.team_assignments = {
         "Team Security": [
-            {"Name": "UFDMBA, Stella"}, {"Name": "ADIGUN, Olamide"},
-            {"Name": "OYEKOLA, Ruth"}, {"Name": "ADEBAYO, Kazim"},
-            {"Name": "ANUFORO, Sylvester"}, {"Name": "EZENDU, Chiamaka"},
-            {"Name": "OKEYMOSES, Precious"}, {"Name": "OSARO, Sunday"},
-            {"Name": "FATOYINBO, Ibrahim"}, {"Name": "CARRILHO, Alexan"},
-            {"Name": "AMATU, Rufus"},{"Name": "ONUMONU, Ifeoma"}, {"Name": "GANDU, Glory"},
-            {"Name": "TOLUHI, Titilope"}, {"Name": "SALIMAN, Suleiman"},
-            {"Name": "BASHIR, Muhammed"}, {"Name": "SANNI, Bolaji"},
-            {"Name": "LASISI, Kehinde"}
-        ], 
+            {"Name": "ADEBAYO, Kazim"}, {"Name": "ADIGUN, Olamide"},
+            {"Name": "AMATU, Rufus"}, {"Name": "ANUFORO, Sylvester"},
+            {"Name": "BASHIR, Muhammed"}, {"Name": "CARRILHO, Alexan"},
+            {"Name": "EZENDU, Chiamaka"}, {"Name": "FATOYINBO, Ibrahim"},
+            {"Name": "GANDU, Glory"}, {"Name": "LASISI, Kehinde"},
+            {"Name": "OKEYMOSES, Precious"}, {"Name": "ONUMONU, Ifeoma"},
+            {"Name": "OSARO, Sunday"}, {"Name": "OYEKOLA, Ruth"},
+            {"Name": "SALIMAN, Suleiman"}, {"Name": "SANNI, Bolaji"},
+            {"Name": "TOLUHI, Titilope"}, {"Name": "UFDMBA, Stella"}
+        ],
         "Team Simplicity": [
-            {"Name": "OLADEJO, Michael"}, {"Name": "AYOOLA, Victoria"},
-            {"Name": "OLAPEJU, Henrietta"}, {"Name": "SALAMI, Ibitayo"}, {"Name": "DADA, Patricia"},
-            {"Name": "BUSARI, Morufudeen"}, {"Name": "ANIFOWOSE, Abdullateef"},
-            {"Name": "BABAJIDE, Daini"}, {"Name": "Arogbo Sunday"},{"Name": "NOAH, Monday"},
-            {"Name": "OKEZIE, Bright"}, {"Name": "ISAH, Mariam"},
-            {"Name": "OFIRI, Cletus"}, {"Name": "SALMAN, Abdulazeez"},
-            {"Name": "AYINDE, Olajumoke"}, {"Name": "AKPAN, David"},
-            {"Name": "OYEBADE, Tosin"}, {"Name": "MOSES, Titilola"}
+            {"Name": "AKPAN, David"}, {"Name": "ANIFOWOSE, Abdullateef"},
+            {"Name": "AROGBO, Sunday"}, {"Name": "AYINDE, Olajumoke"},
+            {"Name": "AYOOLA, Victoria"}, {"Name": "BABAJIDE, Daini"},
+            {"Name": "BUSARI, Morufudeen"}, {"Name": "DADA, Patricia"},
+            {"Name": "ISAH, Mariam"}, {"Name": "MOSES, Titilola"},
+            {"Name": "NOAH, Monday"}, {"Name": "OFIRI, Cletus"},
+            {"Name": "OKEZIE, Bright"}, {"Name": "OLADEJO, Michael"},
+            {"Name": "OLAPEJU, Henrietta"}, {"Name": "OYEBADE, Tosin"},
+            {"Name": "SALAMI, Ibitayo"}, {"Name": "SALMAN, Abdulazeez"}
         ],
         "Team Speed": [
-            {"Name": "OMIWE, Winifred"}, {"Name": "BAKARE, Olasubomi"},
-            {"Name": "MOSUGU, Ronke"}, {"Name": "DAIRO, Opeyemi"},
-            {"Name": "BASHIR, Muhammed"}, {"Name": "OBARO, Micheal"},{"Name": "AKOGUM, Bisola"},
-            {"Name": "FUANPOE, Beatrice"}, {"Name": "AJIBOLA, Miriam"},
-            {"Name": "ABOH, Emmanuel"}, {"Name": "ESOTU, James"},
-            {"Name": "OBI, Irene"}, {"Name": "ANDOHOL, Paul"},
-            {"Name": "BABALOLA, Fiyinfoluwa"}, {"Name": "ONUAH, Peace"},
-            {"Name": "ONONUJU, Godson"}, {"Name": "MICHEAL-DAVID, Samuel"},
-            {"Name": "OKIKIOLU, Adeolu"}
+            {"Name": "ABOH, Emmanuel"}, {"Name": "AJIBOLA, Miriam"},
+            {"Name": "AKOGUM, Bisola"}, {"Name": "ANDOHOL, Paul"},
+            {"Name": "BABALOLA, Fiyinfoluwa"}, {"Name": "BAKARE, Olasubomi"},
+            {"Name": "BASHIR, Muhammed"}, {"Name": "DAIRO, Opeyemi"},
+            {"Name": "ESOTU, James"}, {"Name": "FUANPOE, Beatrice"},
+            {"Name": "MICHEAL-DAVID, Samuel"}, {"Name": "MOSUGU, Ronke"},
+            {"Name": "OBARO, Micheal"}, {"Name": "OBI, Irene"},
+            {"Name": "OKIKIOLU, Adeolu"}, {"Name": "OMIWE, Winifred"},
+            {"Name": "ONONUJU, Godson"}, {"Name": "ONUAH, Peace"}
         ],
         "Team Substance": [
-            {"Name": "OWODUNNI, Mayedun"}, {"Name": "MEKULEYI, Oluwapelumi"},
-            {"Name": "HYACINTH, Jackson"}, {"Name": "OLAJUBU Olaniyi"},
-            {"Name": "OLUFISAYO-MICHAEL, Abimbola"}, {"Name": "OGUNNAIKE, Jane"},
-            {"Name": "JOHNSON-AJALA, Tokunbo"}, {"Name": "OLUWADARE, Paul"},
-            {"Name": "BABALOLA, Zainab"}, {"Name": "MOWOE, Ese"},
-            {"Name": "NESTOR, Gift"}, {"Name": "TADESE, Omotolani"},
-            {"Name": "TOM-DAVID, Goodness"}, {"Name": "OLATUNJI, Elijah"},
-            {"Name": "AZU, Divine"}, {"Name": "JIMOH, Samuel"},
-            {"Name": "KUPAKIN, Prudence"}, {"Name": "OWOJORI, Jumoke"}
+            {"Name": "AZU, Divine"}, {"Name": "BABALOLA, Zainab"},
+            {"Name": "HYACINTH, Jackson"}, {"Name": "JIMOH, Samuel"},
+            {"Name": "JOHNSON-AJALA, Tokunbo"}, {"Name": "KUPAKIN, Prudence"},
+            {"Name": "MEKULEYI, Oluwapelumi"}, {"Name": "MOWOE, Ese"},
+            {"Name": "NESTOR, Gift"}, {"Name": "OGUNNAIKE, Jane"},
+            {"Name": "OLAJUBU Olaniyi"}, {"Name": "OLATUNJI, Elijah"},
+            {"Name": "OLUFISAYO-MICHAEL, Abimbola"}, {"Name": "OLUWADARE, Paul"},
+            {"Name": "OWOJORI, Jumoke"}, {"Name": "OWODUNNI, Mayedun"},
+            {"Name": "TADESE, Omotolani"}, {"Name": "TOM-DAVID, Goodness"}
         ]
     }
+
 
 if "available_staff" not in st.session_state:
     excel_file_path = "staffs.xlsx"
