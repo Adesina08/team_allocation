@@ -58,9 +58,9 @@ if "team_assignments" not in st.session_state:
             {"Name": "BAKARE, Olasubomi"}, {"Name": "DAIRO, Opeyemi"},
             {"Name": "ESOTU, James"}, {"Name": "FUANPOE, Beatrice"},
             {"Name": "MICHEAL-DAVID, Samuel"}, {"Name": "MOSUGU, Ronke"},
-            {"Name": "OBARO, Micheal"}, {"Name": "OBI, Irene"},
+            {"Name": "AGALABRI, Micheal"}, {"Name": "OBI, Irene"},
             {"Name": "OKIKIOLU, Adeolu"}, {"Name": "OMIWE, Winifred"},
-            {"Name": "ONONUJU, Godson"}, {"Name": "ONUAH, Peace"}
+            {"Name": "OLAJUBU Olaniyi"}, {"Name": "ONONUJU, Godson"}, {"Name": "ONUAH, Peace"}
         ],
         "Team Substance": [
             {"Name": "AZU, Divine"}, {"Name": "BABALOLA, Zainab"},
@@ -68,9 +68,9 @@ if "team_assignments" not in st.session_state:
             {"Name": "JOHNSON-AJALA, Tokunbo"}, {"Name": "KUPAKIN, Prudence"},
             {"Name": "MEKULEYI, Oluwapelumi"}, {"Name": "MOWOE, Ese"},
             {"Name": "NESTOR, Gift"}, {"Name": "OGUNNAIKE, Jane"},
-            {"Name": "OLAJUBU Olaniyi"}, {"Name": "OLATUNJI, Elijah"},
-            {"Name": "OLUFISAYO-MICHAEL, Abimbola"}, {"Name": "OLUWADARE, Paul"},
-            {"Name": "OWOJORI, Jumoke"}, {"Name": "OWODUNNI, Mayedun"},
+            {"Name": "OLATUNJI, Elijah"}, {"Name": "OLUFISAYO-MICHAEL, Abimbola"}, 
+            {"Name": "OLUWADARE, Paul"}, {"Name": "OWOJORI, Jumoke"}, 
+            {"Name": "OWODUNNI, Mayedun"}, {"Name": "SCOTT-NNAJI, Vera"},
             {"Name": "TADESE, Omotolani"}, {"Name": "TOM-DAVID, Goodness"}
         ]
     }
