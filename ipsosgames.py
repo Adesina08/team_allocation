@@ -34,8 +34,8 @@ if "team_assignments" not in st.session_state:
             {"Name": "OYEKOLA, Ruth"}, {"Name": "ADFYOLANU, Adeyemi"},
             {"Name": "ANUFORO, Sylvester"}, {"Name": "EZENDU, Chiamaka"},
             {"Name": "OKEYMOSES, Precious"}, {"Name": "AROGBO, Sunday"},
-            {"Name": "FATOYINBO, Ibrahim"}, {"Name": "AMATU, Rufus"},
-            {"Name": "ONUMONU, Ifeoma"}, {"Name": "GANDU, Glory"},
+            {"Name": "FATOYINBO, Ibrahim"}, {"Name": "CARRILHO, Alexan"},
+            {"Name": "AMATU, Rufus"},{"Name": "ONUMONU, Ifeoma"}, {"Name": "GANDU, Glory"},
             {"Name": "TOLUHI, Titilope"}, {"Name": "SALIMAN, Suleiman"},
             {"Name": "BASHIR, Muhammed"}, {"Name": "SANNI, Bolaji"},
             {"Name": "LASISI, Kehinde"}
@@ -59,7 +59,7 @@ if "team_assignments" not in st.session_state:
             {"Name": "ABOH, Emmanuel"}, {"Name": "ESOTU, James"},
             {"Name": "OBI, Irene"}, {"Name": "ANDOHOL, Paul"},
             {"Name": "BABALOLA, Fiyinfoluwa"}, {"Name": "ONUAH, Peace"},
-            {"Name": "ONONUJU, Godson"}, {"Name": "JIMOH, Samuel"},
+            {"Name": "ONONUJU, Godson"}, {"Name": "MICHEAL-DAVID, Samuel"},
             {"Name": "OKIKIOLU, Adeolu"}
         ],
         "Team Substance": [
@@ -69,7 +69,7 @@ if "team_assignments" not in st.session_state:
             {"Name": "JOHNSON-AJALA, Tokunbo"}, {"Name": "OLUWADARE, Paul"},
             {"Name": "BABALOLA, Zainab"}, {"Name": "MOWOE, Ese"},
             {"Name": "NESTOR, Gift"}, {"Name": "TADESE, Omotolani"},
-            {"Name": "ADEYEMO, Adesina"}, {"Name": "OLATUNJI, Elijah"},
+            {"Name": "JIMOH, Samuel"}, {"Name": "OLATUNJI, Elijah"},
             {"Name": "AZU, Divine"}, {"Name": "TOM-DAVID, Goodness"},
             {"Name": "KUPAKIN, Prudence"}, {"Name": "OWOJORI, Jumoke"}
         ]
