@@ -44,7 +44,7 @@ if "team_assignments" not in st.session_state:
             {"Name": "OLADEJO, Michael"}, {"Name": "AYOOLA, Victoria"},
             {"Name": "OLAPEJU, Henrietta"}, {"Name": "SALAMI, Ibitayo"}, {"Name": "DADA, Patricia"},
             {"Name": "BUSARI, Morufudeen"}, {"Name": "ANIFOWOSE, Abdullateef"},
-            {"Name": "PA New staff"}, {"Name": "Arogbo Sunday"},{"Name": "NOAH, Monday"},
+            {"Name": "BABAJIDE, Daini"}, {"Name": "Arogbo Sunday"},{"Name": "NOAH, Monday"},
             {"Name": "OKEZIE, Bright"}, {"Name": "ISAH, Mariam"},
             {"Name": "OFIRI, Cletus"}, {"Name": "SALMAN, Abdulazeez"},
             {"Name": "AYINDE, Olajumoke"}, {"Name": "AKPAN, David"},
@@ -53,7 +53,7 @@ if "team_assignments" not in st.session_state:
         "Team Speed": [
             {"Name": "OMIWE, Winifred"}, {"Name": "BAKARE, Olasubomi"},
             {"Name": "MOSUGU, Ronke"}, {"Name": "DAIRO, Opeyemi"},
-            {"Name": "OKUNLOLA, Fatimoh"}, {"Name": "OBARO, Micheal"},{"Name": "AKOGUM, Bisola"},
+            {"Name": "BASHIR, Muhammed"}, {"Name": "OBARO, Micheal"},{"Name": "AKOGUM, Bisola"},
             {"Name": "FUANPOE, Beatrice"}, {"Name": "AJIBOLA, Miriam"},
             {"Name": "ABOH, Emmanuel"}, {"Name": "ESOTU, James"},
             {"Name": "OBI, Irene"}, {"Name": "ANDOHOL, Paul"},
