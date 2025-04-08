@@ -358,76 +358,76 @@ def home_page():
     # </div>
     # """, unsafe_allow_html=True)
 
-def check_constraints(staff_member, team):
-    """Check only incompatible pairs and team balance"""
-    current_team = st.session_state.team_assignments[team]
+# def check_constraints(staff_member, team):
+#     """Check only incompatible pairs and team balance"""
+#     current_team = st.session_state.team_assignments[team]
     
-    # 1. Incompatibility check
-    incompatible_staff = st.session_state.incompatible_pairs.get(staff_member["Name"], [])
-    current_members = [m["Name"] for m in current_team]
-    if any(name in current_members for name in incompatible_staff):
-        return False
+#     # 1. Incompatibility check
+#     incompatible_staff = st.session_state.incompatible_pairs.get(staff_member["Name"], [])
+#     current_members = [m["Name"] for m in current_team]
+#     if any(name in current_members for name in incompatible_staff):
+#         return False
     
-    # # 2. Minimum team size protection
-    # team_sizes = {t: len(m) for t, m in st.session_state.team_assignments.items()}
-    # min_size = min(team_sizes.values())
-    # if len(current_team) - min_size >= 2:
-    #     return False
+#     # # 2. Minimum team size protection
+#     # team_sizes = {t: len(m) for t, m in st.session_state.team_assignments.items()}
+#     # min_size = min(team_sizes.values())
+#     # if len(current_team) - min_size >= 2:
+#     #     return False
     
-    return True
+#     return True
 
-def calculate_best_team(staff, eligible_teams):
-    """Calculate team with enhanced randomness while considering constraints"""
-    team_scores = []
-    for team in eligible_teams:
-        members = st.session_state.team_assignments[team]
-        # Calculate compatibility penalties
-        prev_group_count = sum(1 for m in members if m.get("Group in previous game") == staff.get("Group in previous game"))
-        level_count = sum(1 for m in members if m.get("Level") == staff.get("Level"))
-        office_floor_count = sum(1 for m in members if m.get("Category") == staff.get("Category"))
-        gender_count = sum(1 for m in members if m.get("Gender") == staff.get("Gender"))
+# def calculate_best_team(staff, eligible_teams):
+#     """Calculate team with enhanced randomness while considering constraints"""
+#     team_scores = []
+#     for team in eligible_teams:
+#         members = st.session_state.team_assignments[team]
+#         # Calculate compatibility penalties
+#         prev_group_count = sum(1 for m in members if m.get("Group in previous game") == staff.get("Group in previous game"))
+#         level_count = sum(1 for m in members if m.get("Level") == staff.get("Level"))
+#         office_floor_count = sum(1 for m in members if m.get("Category") == staff.get("Category"))
+#         gender_count = sum(1 for m in members if m.get("Gender") == staff.get("Gender"))
         
-        penalty = (
-            (prev_group_count * 5) + 
-            (level_count * 3) + 
-            (office_floor_count * 2) + 
-            (gender_count * 2)
-        )
+#         penalty = (
+#             (prev_group_count * 5) + 
+#             (level_count * 3) + 
+#             (office_floor_count * 2) + 
+#             (gender_count * 2)
+#         )
         
-        # Add random factor and team size for sorting
-        team_scores.append((
-            penalty,                # Primary sort key
-            random.random(),        # Random factor for variability
-            len(members),           # Prefer smaller teams
-            team
-        ))
+#         # Add random factor and team size for sorting
+#         team_scores.append((
+#             penalty,                # Primary sort key
+#             random.random(),        # Random factor for variability
+#             len(members),           # Prefer smaller teams
+#             team
+#         ))
     
-    # Sort by: penalty, random, team size
-    sorted_teams = sorted(team_scores, key=lambda x: (x[0], x[1], x[2]))
+#     # Sort by: penalty, random, team size
+#     sorted_teams = sorted(team_scores, key=lambda x: (x[0], x[1], x[2]))
     
-    # Select from top 3 teams with lowest penalties
-    top_teams = sorted_teams[:3]
-    if top_teams:
-        selected = random.choice(top_teams)
-        return selected[3]  # Return team name
-    return sorted_teams[0][3]  # Fallback
+#     # Select from top 3 teams with lowest penalties
+#     top_teams = sorted_teams[:3]
+#     if top_teams:
+#         selected = random.choice(top_teams)
+#         return selected[3]  # Return team name
+#     return sorted_teams[0][3]  # Fallback
 
-def check_constraints(staff_member, team):
-    """Enhanced constraint checking with team balance"""
-    current_team = st.session_state.team_assignments[team]
+# def check_constraints(staff_member, team):
+#     """Enhanced constraint checking with team balance"""
+#     current_team = st.session_state.team_assignments[team]
     
-    # 1. Incompatibility check
-    incompatible_staff = st.session_state.incompatible_pairs.get(staff_member["Name"], [])
-    if any(name in [m["Name"] for m in current_team] for name in incompatible_staff):
-        return False
+#     # 1. Incompatibility check
+#     incompatible_staff = st.session_state.incompatible_pairs.get(staff_member["Name"], [])
+#     if any(name in [m["Name"] for m in current_team] for name in incompatible_staff):
+#         return False
     
-    # 2. Team size balance protection
-    team_sizes = {t: len(m) for t, m in st.session_state.team_assignments.items()}
-    min_size = min(team_sizes.values())
-    if len(current_team) - min_size >= 2:
-        return False
+#     # 2. Team size balance protection
+#     team_sizes = {t: len(m) for t, m in st.session_state.team_assignments.items()}
+#     min_size = min(team_sizes.values())
+#     if len(current_team) - min_size >= 2:
+#         return False
     
-    return True
+#     return True
 
 def team_assignment_page():
 #     """Modified team assignment page with immediate updates"""
