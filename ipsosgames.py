@@ -69,8 +69,8 @@ if "team_assignments" not in st.session_state:
             {"Name": "JOHNSON-AJALA, Tokunbo"}, {"Name": "OLUWADARE, Paul"},
             {"Name": "BABALOLA, Zainab"}, {"Name": "MOWOE, Ese"},
             {"Name": "NESTOR, Gift"}, {"Name": "TADESE, Omotolani"},
-            {"Name": "JIMOH, Samuel"}, {"Name": "OLATUNJI, Elijah"},
-            {"Name": "AZU, Divine"}, {"Name": "TOM-DAVID, Goodness"},
+            {"Name": "TOM-DAVID, Goodness"}, {"Name": "OLATUNJI, Elijah"},
+            {"Name": "AZU, Divine"}, {"Name": "JIMOH, Samuel"},
             {"Name": "KUPAKIN, Prudence"}, {"Name": "OWOJORI, Jumoke"}
         ]
     }
