@@ -298,7 +298,7 @@ st.markdown(
     /* Table styling */
     .streamlit-dataframe table {
         color: black !important;
-        font-size: 16px !important;
+        font-size: 18px !important;
     }
     
     .streamlit-dataframe th, .streamlit-dataframe td {
