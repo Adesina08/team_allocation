@@ -561,8 +561,8 @@ def assign_team_member():
 
 def standings_page():
     """Enhanced Standings Page with Correct Podium Ordering"""
-    st.title("🏆 Team Standings & Historical Performance")
-    st.write("This page will display the standings and historical performance of teams.")
+    st.title("🏆 Team Standings & Past Gameweek Performances")
+    st.write("This page displays the standings and historical performance of teams.")
    
     try:
         # Load historical gameweek data
