@@ -295,6 +295,26 @@ st.markdown(
         color: #666;
         font-size: 0.9em;
     }
+    /* Table styling */
+    .streamlit-dataframe table {
+        color: black !important;
+        font-size: 16px !important;
+    }
+    
+    .streamlit-dataframe th, .streamlit-dataframe td {
+        color: black !important;
+        font-size: 16px !important;
+        white-space: nowrap;
+    }
+    
+    .streamlit-dataframe {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    
+    .stDataFrame {
+        width: 100% !important;
+    }
 </style>
 """,
     unsafe_allow_html=True,
@@ -658,24 +678,30 @@ def calculate_standings(data):
     })[['Team', 'GamesPlayed', '1ST', '2ND', '3RD', '4TH', 'TotalPoints']]
 
 def show_standings_table(standings):
-    """Display styled standings table with all columns"""
+    """Display styled standings table with proper formatting"""
     st.dataframe(
         standings.sort_values('TotalPoints', ascending=False)
         .style
         .format({'TotalPoints': '{:.0f}'})
-        .set_properties(**{'text-align': 'center'})  # Center alignment added here
-        .apply(lambda x: ['background: #0000FF20' if x.Team == 'Team Security' else 
-                        'background: #FF000020' if x.Team == 'Team Speed' else
-                        'background: #FFFFFF20' if x.Team == 'Team Substance' else
-                        'background: #FFFF0020' for i in x], axis=1),
+        .set_properties(**{
+            'text-align': 'center',
+            'color': 'black',
+            'font-size': '16px'
+        })
+        .apply(lambda x: [
+            'background: #0000FF20' if x.Team == 'Team Security' else 
+            'background: #FF000020' if x.Team == 'Team Speed' else
+            'background: #FFFFFF20' if x.Team == 'Team Substance' else
+            'background: #FFFF0020' for i in x], 
+            axis=1),
         column_config={
             "Team": st.column_config.TextColumn("Team", width="medium"),
-            "GamesPlayed": st.column_config.NumberColumn("🎮 Played", format="%d"),
-            "1ST": st.column_config.NumberColumn("🏆 1st", format="%d"),
-            "2ND": st.column_config.NumberColumn("🥈 2nd", format="%d"),
-            "3RD": st.column_config.NumberColumn("🥉 3rd", format="%d"),
-            "4TH": st.column_config.NumberColumn("🔹 4th", format="%d"),
-            "TotalPoints": st.column_config.NumberColumn("⭐ Points", format="%d")
+            "GamesPlayed": "🎮 Played",
+            "1ST": "🏆 1st",
+            "2ND": "🥈 2nd", 
+            "3RD": "🥉 3rd",
+            "4TH": "🔹 4th",
+            "TotalPoints": "⭐ Points"
         },
         use_container_width=True,
         hide_index=True
@@ -732,7 +758,7 @@ def ai_champions_page():
 # Navigation system
 pages = {
     "🏠 Home": "home",
-    "📋 Team Assignment": "assignment",
+    "📋 Teams": "assignment",
     "📊 Standings": "standings",
     "🤖 AI Champions": "champions"
 }
