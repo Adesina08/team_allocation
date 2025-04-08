@@ -52,7 +52,7 @@ if "team_assignments" not in st.session_state:
             {"Name": "SALAMI, Ibitayo"}, {"Name": "SALMAN, Abdulazeez"}
         ],
         "Team Speed": [
-            {"Name": "ABOH, Emmanuel"}, {"Name": "ADEYEMO, Adesina"},
+            {"Name": "ABOH, Emmanuel"},
             {"Name": "AJIBOLA, Miriam"}, {"Name": "AKOGUM, Bisola"}, 
             {"Name": "ANDOHOL, Paul"}, {"Name": "BABALOLA, Fiyinfoluwa"}, 
             {"Name": "BAKARE, Olasubomi"}, {"Name": "DAIRO, Opeyemi"},
