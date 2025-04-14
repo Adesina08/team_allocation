@@ -104,6 +104,8 @@ if "available_staff" not in st.session_state:
 st.markdown(
     """
 <style>
+    .stApp {
+        background-color: white !important;
     /* Updated Team Colors */
     .team-security {
         background: linear-gradient(135deg, #0000FF 0%, #00008B 100%); /* Blue */
